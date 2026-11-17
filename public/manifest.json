@@ -1,0 +1,11 @@
+{
+  "name": "Jogos IEQ",
+  "short_name": "Jogos IEQ",
+  "description": "Histórias da Bíblia em jogos de pixel art.",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "landscape",
+  "background_color": "#0a0b10",
+  "theme_color": "#0a0b10",
+  "icons": [{ "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }]
+}
