@@ -12,9 +12,10 @@
  *        '*' gem · 'P' start · 'E' exit · 'C' checkpoint · 'N' person · 'S' sick person (heal)
  *        'X' enemy that patrols · 'A' small creature (snake, scorpion) · 'W' flying creature
  *        'T' torch · 'V' vase · 'b' bush to hide in
+ *        'r' symbol dial (three) · 's' tablet with the code · 'U' sealed door that opens when the dials show the code
  */
 
-export type ThemeId = 'egypt' | 'palace' | 'desert' | 'cave' | 'village' | 'temple' | 'shore' | 'night';
+export type ThemeId = 'egypt' | 'palace' | 'desert' | 'cave' | 'village' | 'temple' | 'shore' | 'night' | 'persia' | 'garden' | 'susa';
 export type TimeOfDay = 'dawn' | 'day' | 'sunset' | 'night' | 'storm';
 /** How the hero deals with enemies. */
 export type Style = 'sling' | 'strong' | 'stealth' | 'peace';
@@ -48,6 +49,18 @@ const S: Record<string, string[]> = {
     '..............Q..',
     '...1...2...3..Q..',
     '#################',
+  ],
+  vault: [
+    '...............#..',
+    '...............#..',
+    '...............#..',
+    '...............#..',
+    '..s............#..',
+    '...............#..',
+    '........*......#..',
+    '...............U..',
+    '...r....r....r.U..',
+    '##################',
   ],
   secret: ['............', '............', '....####....', '....#**?....', '....#*.?....', '....#####...', '............', '.........==.', '............', '############'],
   // Enemies.
@@ -121,15 +134,19 @@ export function chapterLevel(theme: ThemeId, chapter: number, diff: number, npc?
     ['spikes', 'plate', 'tower', 'lever'],
     ['secret', 'steps', 'sequence', 'pit'],
   ];
-  const a = pool[chapter % pool.length];
-  const b = pool[(chapter + 3) % pool.length].filter((x) => x !== 'door' && x !== 'key');
+  // Persian stages swap the lever sequence for the sealed door with symbol dials.
+  const persian = theme === 'persia' || theme === 'garden' || theme === 'susa';
+  const swap = (l: string[]) => (persian ? l.map((x) => (x === 'sequence' ? 'flat' : x)) : l);
+  const a = swap(pool[chapter % pool.length]);
+  const b = swap(pool[(chapter + 3) % pool.length]).filter((x) => x !== 'door' && x !== 'key');
   const en = ENEMY[style];
   const e1 = en[chapter % en.length];
   const e2 = en[(chapter + 1) % en.length];
   const mid = diff === 0 ? [e1] : diff === 1 ? [e1, ...b.slice(0, 2)] : [e1, ...b.slice(0, 3), e2];
   // Jesus always meets someone to heal.
   const heal = style === 'peace' ? ['sick'] : [];
-  return { theme, time, segments: ['start', 'npc', ...a.slice(0, 2), ...heal, ...a.slice(2), 'check', ...mid, 'flat', 'exit'], npc, goal };
+  const vault = persian ? ['vault'] : [];
+  return { theme, time, segments: ['start', 'npc', ...a.slice(0, 2), ...heal, ...a.slice(2), ...vault, 'check', ...mid, 'flat', 'exit'], npc, goal };
 }
 
 // ---------------------------------------------------------------- validator
@@ -144,6 +161,8 @@ export function validate(rows: string[], strong = false): boolean {
   let gatesOpen = false;
   let plateOpen = false;
   const seq = new Set<string>();
+  const dials = new Set<string>();
+  const totalDials = rows.reduce((n, r) => n + [...r].filter((ch) => ch === 'r').length, 0);
   const taken = new Set<string>();
   const hasCrate = rows.some((r) => r.includes('B'));
   const solid = (r: number, c: number) => {
@@ -153,6 +172,7 @@ export function validate(rows: string[], strong = false): boolean {
     if (t === 'G') return !gatesOpen;
     if (t === 'O') return !plateOpen;
     if (t === 'Q') return seq.size < 3;
+    if (t === 'U') return dials.size < totalDials;
     if (t === 'x') return !strong;
     return false;
   };
@@ -189,6 +209,10 @@ export function validate(rows: string[], strong = false): boolean {
       }
       if (t === 'p' && hasCrate && !plateOpen) {
         plateOpen = true;
+        changed = true;
+      }
+      if (t === 'r' && !dials.has(`${r},${c}`)) {
+        dials.add(`${r},${c}`);
         changed = true;
       }
       if ('123'.includes(t) && !seq.has(t)) {

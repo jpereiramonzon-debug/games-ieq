@@ -46,6 +46,10 @@ const THEMES: Record<ThemeId, Theme> = {
   temple: { block: '#e4dccb', mortar: '#b8ac96', band: ['#e8b830', '#c8902a', '#3a6ab8', '#fff0b0'], wall: '#9a8e7a', plat: '#c8a060' },
   shore: { block: '#b89a6a', mortar: '#8a7048', band: null, wall: null, plat: '#8a5a30', grass: '#6aa848' },
   night: { block: '#6a6a7e', mortar: '#3a3a4a', band: null, wall: null, plat: '#6a5a4a', grass: '#3a6a3a' },
+  // Susa: glazed-brick bands (blue and gold rosettes), royal gardens and the palace halls.
+  persia: { block: '#c8a878', mortar: '#9a7a52', band: ['#2a5ab0', '#e8b830', '#3a8ac8', '#f4e0a0'], wall: null, plat: '#b87a3a' },
+  garden: { block: '#d8ccb0', mortar: '#a89a80', band: null, wall: null, plat: '#c89a5a', grass: '#4a9a3a' },
+  susa: { block: '#c8b498', mortar: '#8a7458', band: ['#3a5ab0', '#e8b830', '#8a2a5a', '#f0e0b0'], wall: '#4a2e48', plat: '#e0b050' },
 };
 
 // ------------------------------------------------------------------ tiles
@@ -141,6 +145,11 @@ function paintTiles(rows: string[], th: Theme) {
         // Mural frame (symbols drawn live).
         px(X - 6, Y - 6, 32, 26, '#5a3a1e');
         px(X - 4, Y - 4, 28, 22, '#e8d8b0');
+      } else if (t === 's') {
+        // Clay tablet with the door's code (symbols drawn live).
+        px(X - 7, Y - 5, 34, 22, '#4a2e1a');
+        px(X - 5, Y - 3, 30, 18, '#c8a070');
+        px(X - 5, Y - 3, 30, 2, '#e0c090');
       } else if (t === 'p') {
         px(X + 2, Y + 16, 16, 4, '#5a5a64');
       }
@@ -237,6 +246,8 @@ interface Part {
 }
 
 const SYMBOLS = ['☀', '☾', '★'];
+/** Symbols of the sealed door's dials. */
+const DIAL = ['☀', '☾', '★', '✿'];
 
 export interface PlatformProps extends GameProps {
   spec: LevelSpec;
@@ -262,7 +273,9 @@ export function Platform({ spec, cast, style, paused, onWin, diff = 1 }: Platfor
   const at = (r: number, c: number) => (r < 0 || c < 0 || r >= H || c >= W ? '#' : rows[r][c]);
   const enemyCast: CastId =
     style === 'stealth'
-      ? spec.theme === 'egypt' || spec.theme === 'palace'
+      ? spec.theme === 'persia' || spec.theme === 'garden' || spec.theme === 'susa'
+        ? 'persa'
+        : spec.theme === 'egypt' || spec.theme === 'palace'
         ? 'guarda'
         : spec.theme === 'desert' || spec.theme === 'village'
           ? 'irmao'
@@ -286,6 +299,7 @@ export function Platform({ spec, cast, style, paused, onWin, diff = 1 }: Platfor
     // A required order for the lever sequence (shown on the mural).
     const order = [0, 1, 2].sort(() => Math.random() - 0.5);
     const leverSym: Record<string, number> = {};
+    const dialKeys: string[] = [];
     const perm = [0, 1, 2].sort(() => Math.random() - 0.5);
     rows.forEach((row, r) =>
       [...row].forEach((ch, c) => {
@@ -299,7 +313,8 @@ export function Platform({ spec, cast, style, paused, onWin, diff = 1 }: Platfor
           gems++;
           if (at(r, c - 1) === '#' || at(r, c + 1) === '?' || at(r, c - 1) === '?') secrets++;
         }
-        if ('k*CLEp123'.includes(ch)) items.set(`${r},${c}`, ch);
+        if ('k*CLEp123r'.includes(ch)) items.set(`${r},${c}`, ch);
+        if (ch === 'r') dialKeys.push(`${r},${c}`);
         if ('123'.includes(ch)) leverSym[`${r},${c}`] = perm['123'.indexOf(ch)];
         if (ch === 'B') crates.push({ x: c * T, y: r * T, vy: 0, locked: false });
         if (ch === 'N' || ch === 'S')
@@ -313,6 +328,7 @@ export function Platform({ spec, cast, style, paused, onWin, diff = 1 }: Platfor
         if (ch === 'W') enemies.push({ ...base, y: Y - T * 2, homeY: Y - T * 2, kind: 'bat', state: 'patrol', hp: 1 });
       }),
     );
+    const code = dialKeys.map(() => Math.floor(Math.random() * DIAL.length));
     return {
       x: px,
       y: py,
@@ -340,6 +356,12 @@ export function Platform({ spec, cast, style, paused, onWin, diff = 1 }: Platfor
       leverSym,
       seq: [] as number[],
       seqOpen: false,
+      dialKeys,
+      code,
+      // Every dial starts on a wrong symbol.
+      dial: Object.fromEntries(dialKeys.map((k, i) => [k, (code[i] + 1 + Math.floor(Math.random() * (DIAL.length - 1))) % DIAL.length])) as Record<string, number>,
+      vaultOpen: dialKeys.length === 0,
+      vaultT: 0,
       items,
       crates,
       enemies,
@@ -388,6 +410,7 @@ export function Platform({ spec, cast, style, paused, onWin, diff = 1 }: Platfor
       if (ch === 'G') return !s.gates;
       if (ch === 'O') return !s.plate;
       if (ch === 'Q') return !s.seqOpen;
+      if (ch === 'U') return !s.vaultOpen;
       if (ch === 'x') return !s.broken.has(`${r},${c}`);
       return false;
     };
@@ -837,6 +860,7 @@ export function Platform({ spec, cast, style, paused, onWin, diff = 1 }: Platfor
     s.parts = s.parts.filter((p) => p.life > 0);
     s.shake = Math.max(0, s.shake - rawDt);
     s.flash = Math.max(0, s.flash - rawDt);
+    if (s.vaultOpen) s.vaultT += rawDt;
 
     // ---- hero animation
     let anim: Anim = 'idle';
@@ -916,6 +940,41 @@ export function Platform({ spec, cast, style, paused, onWin, diff = 1 }: Platfor
             ctx.fillStyle = ch === 'Q' ? '#b8902a' : '#6a6a78';
             ctx.fillRect(X + 2 + q * 5, Y - lift, 3, T - (open ? T - 4 : 0));
           }
+        } else if (ch === 'U' && at(r - 1, c) !== 'U') {
+          // Sealed bronze door with a dial window for each pedestal.
+          const lift = s.vaultOpen ? Math.min(2 * T - 4, (s.vaultT ?? 0) * 60) : 0;
+          ctx.save();
+          ctx.beginPath();
+          ctx.rect(X - 6, Y - 2 * T - 4, T + 12, 3 * T + 4);
+          ctx.clip();
+          const Y0 = Y - lift;
+          ctx.fillStyle = '#2a1a10';
+          ctx.fillRect(X - 3, Y0 - 1, T + 6, 2 * T + 2);
+          ctx.fillStyle = '#a8782a';
+          ctx.fillRect(X - 2, Y0, T + 4, 2 * T);
+          ctx.fillStyle = '#c8983a';
+          ctx.fillRect(X - 2, Y0, 3, 2 * T);
+          ctx.strokeStyle = '#e8c860';
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.arc(X + T / 2, Y0 + T, 8, 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.fillStyle = '#1a2a3a';
+          ctx.fillRect(X - 1, Y0 + T - 5, T + 2, 10);
+          ctx.font = '8px serif';
+          s.dialKeys.forEach((k, q) => {
+            const okSym = s.dial[k] === s.code[q];
+            ctx.fillStyle = s.vaultOpen || okSym ? '#7af0a0' : '#7ad8ff';
+            ctx.fillText(DIAL[s.dial[k]], X + q * 7 - 1, Y0 + T + 3);
+          });
+          lights.push([X + T / 2, Y0 + T, 24]);
+          ctx.restore();
+        } else if (ch === 's') {
+          ctx.font = '11px serif';
+          s.code.forEach((sym, q) => {
+            ctx.fillStyle = '#4a2a14';
+            ctx.fillText(DIAL[sym], X - 3 + q * 9, Y + 10);
+          });
         } else if (ch === 'x' && !s.broken.has(`${r},${c}`)) {
           ctx.fillStyle = '#2a1a10';
           ctx.fillRect(X + 4, Y + 3, 1, 6);
@@ -1009,6 +1068,24 @@ export function Platform({ spec, cast, style, paused, onWin, diff = 1 }: Platfor
           ctx.font = '10px serif';
           ctx.fillText(SYMBOLS[seqIdx], X + 6, Y + 2);
         }
+      } else if (it === 'r') {
+        // Stone pedestal with a glowing ring and its current symbol.
+        ctx.fillStyle = '#2a1a10';
+        ctx.fillRect(X + 4, Y + 6, 12, 14);
+        ctx.fillStyle = '#c8bca8';
+        ctx.fillRect(X + 5, Y + 7, 10, 13);
+        ctx.fillStyle = '#e8e0d0';
+        ctx.fillRect(X + 3, Y + 5, 14, 3);
+        const okSym = s.vaultOpen || s.dial[key] === s.code[s.dialKeys.indexOf(key)];
+        ctx.strokeStyle = okSym ? '#7af0a0' : '#5ad8ff';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.arc(X + 10, Y - 2 + bob * 0.5, 6, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.fillStyle = '#f4f0ff';
+        ctx.font = '9px serif';
+        ctx.fillText(DIAL[s.dial[key]], X + 6, Y + 1 + bob * 0.5);
+        lights.push([X + 10, Y, 22]);
       } else if (it === 'p') {
         ctx.fillStyle = s.plate ? '#3ac04a' : '#b89a40';
         ctx.fillRect(X + 3, Y + (s.plate ? 17 : 15), 14, 2);
@@ -1183,6 +1260,7 @@ export function Platform({ spec, cast, style, paused, onWin, diff = 1 }: Platfor
       const it = s.items.get(`${r},${c + dc}`);
       if (it === 'L') return { kind: 'lever' as const };
       if (it && '123'.includes(it)) return { kind: 'seq' as const, key: `${r},${c + dc}` };
+      if (it === 'r') return { kind: 'dial' as const, key: `${r},${c + dc}` };
     }
     const n = s.npcs.find((q) => Math.abs(q.x - s.x) < 24 && Math.abs(q.y - s.y) < 12);
     if (n?.sick && !n.healed && (cast === 'jesus' || cast === 'pedro')) return { kind: 'heal' as const, n };
@@ -1222,6 +1300,20 @@ export function Platform({ spec, cast, style, paused, onWin, diff = 1 }: Platfor
         engine.sfx('bonk');
         buzz([40, 40]);
         flashMsg('Ordem errada! Veja o mural na parede.');
+      }
+    } else if (nr.kind === 'dial') {
+      if (s.vaultOpen) return;
+      s.action = { anim: 'interact', t: 0, hit: true };
+      s.dial[nr.key] = (s.dial[nr.key] + 1) % DIAL.length;
+      engine.playNote(67 + s.dial[nr.key] * 3, 'pluck', 0, 0.25);
+      buzz(15);
+      if (s.dialKeys.every((k, q) => s.dial[k] === s.code[q])) {
+        s.vaultOpen = true;
+        s.vaultT = 0;
+        engine.sfx('power');
+        engine.playNote(79, 'bell', 0.15, 0.35);
+        buzz([30, 30, 90]);
+        flashMsg('A porta selada se abriu!');
       }
     } else if (nr.kind === 'heal') {
       nr.n.healed = true;
@@ -1277,7 +1369,7 @@ export function Platform({ spec, cast, style, paused, onWin, diff = 1 }: Platfor
   useEffect(() => () => void (jumpHeld.current = false), []);
   const s = st.current;
   const nr = !paused ? near() : null;
-  const label = !nr ? 'Ação' : { lever: 'Alavanca', seq: 'Alavanca', heal: 'Curar', bless: 'Abençoar', npc: 'Falar', attack: style === 'sling' ? 'Funda' : 'Soco' }[nr.kind];
+  const label = !nr ? 'Ação' : { lever: 'Alavanca', seq: 'Alavanca', dial: 'Girar', heal: 'Curar', bless: 'Abençoar', npc: 'Falar', attack: style === 'sling' ? 'Funda' : 'Soco' }[nr.kind];
   const hot = !!nr && nr.kind !== 'attack';
   return (
     <>

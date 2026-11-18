@@ -23,6 +23,9 @@ const GROUND: Record<ThemeId, [string, string]> = {
   temple: ['#e4dccb', '#b8ac96'],
   cave: ['#6a5a4a', '#4a3e32'],
   night: ['#3a6a3a', '#5a4a3a'],
+  persia: ['#c8a878', '#9a7a52'],
+  garden: ['#4a9a3a', '#d8ccb0'],
+  susa: ['#c8b498', '#8a7458'],
 };
 
 export function Cinematic({

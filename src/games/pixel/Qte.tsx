@@ -127,18 +127,18 @@ export function Qte({
   });
 
   return (
-    <div className="absolute inset-0 z-20 grid place-items-center bg-black/55 p-2">
-      <div key={`${hits}-${miss}`} className={cx('rpg-frame rpg-text flex w-full max-w-2xl items-center gap-3 p-3', miss + hits > 0 && (msg?.mood === 'sad' ? 'fb-miss' : 'fb-hit'))}>
+    <div className="absolute inset-0 z-20 flex overflow-y-auto bg-black/55 p-2">
+      <div key={`${hits}-${miss}`} className={cx('rpg-frame rpg-text m-auto flex w-full max-w-2xl items-center gap-3 p-3 short:gap-2 short:p-2', miss + hits > 0 && (msg?.mood === 'sad' ? 'fb-miss' : 'fb-hit'))}>
         <div className="flex w-32 shrink-0 flex-col items-center gap-1 text-center text-sm leading-snug">
-          <Portrait look={look} img={img} mood={msg?.mood ?? 'neutral'} bg={bg} className="h-20 w-20" />
+          <Portrait look={look} img={img} mood={msg?.mood ?? 'neutral'} bg={bg} className="h-20 w-20 short:h-14 short:w-14" />
           <span key={msg?.text ?? hint} className="animate-pop">
             {msg?.text ?? hint}
           </span>
         </div>
-        <div className="flex min-w-0 flex-1 flex-col items-center gap-2">
-          <p className="text-xl text-[#ffe08a]">{title}</p>
+        <div className="flex min-w-0 flex-1 flex-col items-center gap-2 short:gap-1">
+          <p className="text-xl text-[#ffe08a] short:text-lg">{title}</p>
           {kind === 'ring' && (
-            <div className="relative grid h-36 w-36 place-items-center">
+            <div className="relative grid h-36 w-36 place-items-center short:h-28 short:w-28">
               <span className="absolute h-[42%] w-[42%] rounded-full border-4 border-[#ffe08a] shadow-[0_0_12px_#ffe08a]" />
               <span className="absolute rounded-full border-4 border-white/90" style={{ width: `${ring * 100}%`, height: `${ring * 100}%` }} />
               <span className="text-sm">
@@ -165,7 +165,7 @@ export function Qte({
               e.preventDefault();
               tap();
             }}
-            className={cx('rpg-wood h-16 w-full touch-none text-2xl active:translate-y-0.5', kind === 'mash' && 'animate-blink')}
+            className={cx('rpg-wood h-16 w-full touch-none text-2xl active:translate-y-0.5 short:h-12', kind === 'mash' && 'animate-blink')}
           >
             {button}
           </button>

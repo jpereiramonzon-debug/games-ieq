@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState, type ComponentType } from 'react';
 import { createPortal } from 'react-dom';
-import { Check, Lock, Music, RotateCw, VolumeX, X } from 'lucide-react';
+import { BookOpen, Check, Lock, Music, RotateCw, ScrollText, Target, VolumeX, X } from 'lucide-react';
 import { engine } from '../../audio/engine';
 import { get, set, submitScore, useStore } from '../../store';
 import { cx } from '../../ui/kit';
@@ -11,6 +11,7 @@ import type { Mood } from './bust';
 import type { Look } from './person';
 import type { GameProps } from './stage';
 import { RotateHint } from './orientation';
+import { setSpeaker } from './speaker';
 import { useBgm, type Track } from '../bgm';
 import { Platform } from '../platform/Platform';
 import { Cinematic } from '../platform/Cinematic';
@@ -23,6 +24,10 @@ export interface SLine {
   who: string;
   text: string;
   mood?: Mood;
+  /** Bible reference when the line quotes or follows Scripture. */
+  ref?: string;
+  /** Instruction of the challenge (gameplay, not part of the Bible story). */
+  game?: boolean;
 }
 export interface SChapter {
   id: string;
@@ -34,7 +39,7 @@ export interface SChapter {
 }
 export interface Saga {
   /** Store key for finished chapters and score id. */
-  key: 'davidDone' | 'samsonDone' | 'peterDone' | 'noahDone' | 'lifeDone' | 'josephDone';
+  key: 'davidDone' | 'samsonDone' | 'peterDone' | 'noahDone' | 'lifeDone' | 'josephDone' | 'estherDone';
   title: string;
   blurb: string;
   hero: Look;
@@ -54,6 +59,11 @@ export interface Saga {
   music: Track;
   chapterMusic?: Record<string, Track>;
   quiet?: string[];
+  /** Keepsake earned in each chapter (shown in the journal). */
+  items?: Record<string, { icon: string; name: string; desc: string }>;
+  achievements?: { icon: string; title: string; desc: string; test: (done: string[], stars: (id: string) => number) => boolean }[];
+  /** What comes from the Bible and what is part of the game. */
+  note?: string;
 }
 
 export function StoryMenu({ saga, onBack }: { saga: Saga; onBack: () => void }) {
@@ -89,7 +99,9 @@ export function StoryMenu({ saga, onBack }: { saga: Saga; onBack: () => void }) 
         )}
         <div className="rpg-frame rpg-text flex-1 p-3 text-lg leading-snug">{saga.blurb}</div>
       </div>
+      {saga.note && <p className="rpg-frame rpg-text px-3 py-1.5 text-sm leading-snug">📖 {saga.note}</p>}
       <DiffPicker />
+      {(saga.items || saga.achievements) && <Journal saga={saga} done={done} stars={(id) => stars[`${saga.key}:${id}`] ?? 0} />}
       <ol className="grid gap-1.5 sm:grid-cols-2">
         {CHAPTERS.map((c, i) => {
           const ok = done.includes(c.id);
@@ -135,11 +147,103 @@ export function StoryMenu({ saga, onBack }: { saga: Saga; onBack: () => void }) 
   );
 }
 
-function Talk({ lines, speakers, onDone }: { lines: SLine[]; speakers: Saga['speakers']; onDone: () => void }) {
+/** Journal: keepsakes from each finished chapter and the achievements. */
+function Journal({ saga, done, stars }: { saga: Saga; done: string[]; stars: (id: string) => number }) {
+  const [open, setOpen] = useState(false);
+  const got = (saga.achievements ?? []).filter((a) => a.test(done, stars));
+  const items = saga.chapters.filter((c) => saga.items?.[c.id]);
+  return (
+    <div className="rpg-frame rpg-text px-2 py-1.5">
+      <button onClick={() => setOpen(!open)} className="flex w-full items-center gap-2 text-left text-base" aria-expanded={open}>
+        <BookOpen size={18} />
+        <span className="flex-1">Diário de {saga.title.split(' ')[0]}</span>
+        <span className="text-sm text-[#ffe08a]">
+          🏆 {got.length}/{saga.achievements?.length ?? 0} · 🎒 {items.filter((c) => done.includes(c.id)).length}/{items.length}
+        </span>
+      </button>
+      {open && (
+        <div className="mt-2 grid gap-2 sm:grid-cols-2">
+          <div>
+            <p className="text-sm text-[#ffe08a]">Conquistas</p>
+            <ul className="grid gap-1">
+              {(saga.achievements ?? []).map((a) => {
+                const ok = got.includes(a);
+                return (
+                  <li key={a.title} className={cx('flex items-center gap-2 text-sm leading-tight', !ok && 'opacity-45')}>
+                    <span className="text-xl">{ok ? a.icon : '🔒'}</span>
+                    <span>
+                      {a.title}
+                      <span className="block text-xs opacity-80">{a.desc}</span>
+                    </span>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+          <div>
+            <p className="text-sm text-[#ffe08a]">Baú de recordações</p>
+            <ul className="grid gap-1">
+              {items.map((c) => {
+                const it = saga.items![c.id];
+                const ok = done.includes(c.id);
+                return (
+                  <li key={c.id} className={cx('flex items-center gap-2 text-sm leading-tight', !ok && 'opacity-45')}>
+                    <span className="text-xl">{ok ? it.icon : '❔'}</span>
+                    <span>
+                      {ok ? it.name : 'Ainda não encontrado'}
+                      {ok && <span className="block text-xs opacity-80">{it.desc}</span>}
+                    </span>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/** Everything said so far in the chapter. */
+function History({ log, speakers, onClose }: { log: SLine[]; speakers: Saga['speakers']; onClose: () => void }) {
+  return (
+    <div className="absolute inset-0 z-40 flex bg-black/70 p-2" onClick={onClose}>
+      <div className="rpg-frame rpg-text m-auto flex max-h-full w-full max-w-2xl flex-col p-2" onClick={(e) => e.stopPropagation()}>
+        <div className="flex items-center justify-between text-[#ffe08a]">
+          <span>Histórico de diálogos</span>
+          <button onClick={onClose} className="rpg-wood grid h-9 w-9 place-items-center" aria-label="Fechar histórico">
+            <X size={16} />
+          </button>
+        </div>
+        <ul className="mt-1 flex min-h-0 flex-col gap-1.5 overflow-y-auto pr-1 text-sm leading-snug">
+          {log.map((l, k) => (
+            <li key={k}>
+              <span className="text-[#ffe08a]">{speakers[l.who]?.name || 'Narrador'}: </span>
+              {l.text}
+              {l.ref && <span className="ml-1 whitespace-nowrap text-xs opacity-75">📖 {l.ref}</span>}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+}
+
+function Talk({ lines, speakers, onDone, onLine, log }: { lines: SLine[]; speakers: Saga['speakers']; onDone: () => void; onLine?: (l: SLine) => void; log?: SLine[] }) {
   const [i, setI] = useState(0);
+  const [hist, setHist] = useState(false);
+  useEffect(() => {
+    const l = lines[i];
+    if (!l) return;
+    onLine?.(l);
+    setSpeaker({ who: l.who, mood: l.mood });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [i, lines]);
+  useEffect(() => () => setSpeaker(null), []);
   const typing = useRef({ done: true, finish: () => {} });
   const line = lines[i];
   const next = () => {
+    if (hist) return;
     if (!typing.current.done) return typing.current.finish();
     engine.playNote(84, 'bell', 0, 0.18);
     if (i + 1 < lines.length) setI(i + 1);
@@ -162,6 +266,11 @@ function Talk({ lines, speakers, onDone }: { lines: SLine[]; speakers: Saga['spe
       <div className="absolute inset-x-0 bottom-0 z-20 p-2 pl-[max(0.5rem,env(safe-area-inset-left))] pr-[max(0.5rem,env(safe-area-inset-right))]" onClick={next}>
         <div className="mx-auto max-w-3xl">
           <Dialog look={sp.look} img={sp.img} mood={line.mood} bg={sp.bg} name={sp.name || undefined} size="lg">
+            {(line.ref || line.game) && (
+              <span className={cx('mb-0.5 self-start rounded-sm px-1 text-[0.7em]', line.game ? 'bg-[#3a6a2a] text-[#e8ffd8]' : 'bg-[#5b3a1e] text-[#ffe08a]')}>
+                {line.game ? '🎮 Desafio do jogo' : `📖 ${line.ref}`}
+              </span>
+            )}
             {line.who === 'narrator' ? (
               <em>
                 <Typed key={i} text={line.text} ctl={typing} />
@@ -173,9 +282,17 @@ function Talk({ lines, speakers, onDone }: { lines: SLine[]; speakers: Saga['spe
           </Dialog>
         </div>
       </div>
-      <button onClick={onDone} className="rpg-wood rpg-text absolute right-[max(0.5rem,env(safe-area-inset-right))] top-2 z-20 px-3 py-1 text-sm" aria-label="Pular conversa">
-        Pular ⏩
-      </button>
+      <div className="absolute right-[max(0.5rem,env(safe-area-inset-right))] top-2 z-20 flex gap-1.5">
+        {log && (
+          <button onClick={() => setHist(true)} className="rpg-wood rpg-text grid h-8 w-9 place-items-center" aria-label="Histórico de diálogos">
+            <ScrollText size={16} />
+          </button>
+        )}
+        <button onClick={onDone} className="rpg-wood rpg-text px-3 py-1 text-sm" aria-label="Pular conversa">
+          Pular ⏩
+        </button>
+      </div>
+      {hist && log && <History log={log} speakers={speakers} onClose={() => setHist(false)} />}
     </>
   );
 }
@@ -205,6 +322,12 @@ function Story({ saga, chapter, onExit, onNext }: { saga: Saga; chapter: SChapte
   useBgm(quiet ? null : (saga.chapterMusic?.[chapter.id] ?? saga.music), 2);
   const bgm = useStore((s) => s.bgm);
   const [earned, setEarned] = useState(0);
+  const log = useRef<SLine[]>([]);
+  const addLog = (l: SLine) => {
+    if (log.current[log.current.length - 1] !== l) log.current.push(l);
+  };
+  const [goalOpen, setGoalOpen] = useState(false);
+  const goalLine = [...((phase === 'game2' ? chapter.mid : chapter.intro) ?? [])].reverse().find((l) => l.game) ?? (phase === 'game' || phase === 'game2' ? [...(phase === 'game2' ? (chapter.mid ?? []) : chapter.intro)].reverse().find((l) => l.who === 'narrator') : undefined);
   const win = (next: Phase) => (st?: number) => {
     got.current.push(st ?? 2);
     setPhase(next);
@@ -213,6 +336,8 @@ function Story({ saga, chapter, onExit, onNext }: { saga: Saga; chapter: SChapte
   useEffect(() => {
     setPhase('title');
     got.current = [];
+    log.current = [];
+    setGoalOpen(false);
     const t = window.setTimeout(() => setPhase((p) => (p === 'title' && !saga.explore?.[chapter.id]?.place ? first : p)), 1100);
     engine.playNote(62, 'bell', 0, 0.25);
     engine.playNote(69, 'bell', 0.25, 0.22);
@@ -290,35 +415,57 @@ function Story({ saga, chapter, onExit, onNext }: { saga: Saga; chapter: SChapte
           </div>
         </div>
       )}
-      {phase === 'intro' && <Talk key="intro" speakers={saga.speakers} lines={chapter.intro} onDone={() => setPhase('game')} />}
-      {phase === 'mid' && chapter.mid && <Talk key="mid" speakers={saga.speakers} lines={chapter.mid} onDone={() => setPhase('game2')} />}
-      {phase === 'outro' && <Talk key="outro" speakers={saga.speakers} lines={chapter.outro} onDone={finish} />}
+      {phase === 'intro' && <Talk key="intro" speakers={saga.speakers} lines={chapter.intro} onDone={() => setPhase('game')} onLine={addLog} log={log.current} />}
+      {phase === 'mid' && chapter.mid && <Talk key="mid" speakers={saga.speakers} lines={chapter.mid} onDone={() => setPhase('game2')} onLine={addLog} log={log.current} />}
+      {phase === 'outro' && <Talk key="outro" speakers={saga.speakers} lines={chapter.outro} onDone={finish} onLine={addLog} log={log.current} />}
+      {(phase === 'game' || phase === 'game2') && goalLine && (
+        <>
+          <button
+            onClick={() => setGoalOpen(!goalOpen)}
+            aria-label="Objetivo"
+            aria-expanded={goalOpen}
+            className="rpg-wood rpg-text absolute right-[max(0.5rem,env(safe-area-inset-right))] top-2 z-30 grid h-10 w-10 place-items-center"
+          >
+            <Target size={18} />
+          </button>
+          {goalOpen && (
+            <div className="rpg-frame rpg-text absolute right-[max(0.5rem,env(safe-area-inset-right))] top-14 z-30 max-w-xs p-2 text-sm leading-snug" onClick={() => setGoalOpen(false)}>
+              <span className="text-[#ffe08a]">Objetivo: </span>
+              {goalLine.text}
+            </div>
+          )}
+        </>
+      )}
       {phase === 'end' && (
-        <div className="animate-pop absolute inset-0 z-20 grid place-items-center bg-black/60 p-4">
-          <div className="rpg-frame rpg-text flex max-w-md flex-col items-center gap-3 p-4 text-center">
-            <Portrait look={following ? saga.hero : saga.finalLook} mood="happy" className="h-24 w-24" />
-            <p className="text-2xl">Capítulo concluído!</p>
-            <p className="flex gap-1 text-4xl" aria-label={`${earned} de 3 estrelas`}>
-              {[0, 1, 2].map((k) => (
-                <span key={k} className={cx('animate-pop', k < earned ? 'text-[#ffd23a] drop-shadow-[0_0_6px_#ffd23a]' : 'opacity-25')} style={{ animationDelay: `${k * 180}ms` }}>
-                  ★
-                </span>
-              ))}
-            </p>
-            <p className="text-xs opacity-80">
-              {earned < 3 ? (diff === 0 ? 'No Fácil o máximo é 2 estrelas. Tente o Normal ou o Difícil!' : 'Jogue de novo para tirar 3 estrelas!') : 'Perfeito!'}
-            </p>
-            <p className="text-[#ffe08a]">{chapter.title}</p>
-            {following ? (
-              <button onClick={() => onNext(following.id)} className="rpg-wood h-12 w-full text-xl">
-                Próximo: {following.title}
+        <div className="animate-pop absolute inset-0 z-20 flex overflow-y-auto bg-black/60 p-4 short:p-2">
+          <div className="rpg-frame rpg-text m-auto flex max-w-md flex-col items-center gap-3 p-4 text-center short:max-w-2xl short:flex-row short:gap-4 short:p-3">
+            <div className="flex flex-col items-center gap-2 short:gap-1">
+              <Portrait look={following ? saga.hero : saga.finalLook} mood="happy" className="h-24 w-24 short:h-16 short:w-16" />
+              <p className="text-2xl short:text-xl">Capítulo concluído!</p>
+              <p className="flex gap-1 text-4xl short:text-3xl" aria-label={`${earned} de 3 estrelas`}>
+                {[0, 1, 2].map((k) => (
+                  <span key={k} className={cx('animate-pop', k < earned ? 'text-[#ffd23a] drop-shadow-[0_0_6px_#ffd23a]' : 'opacity-25')} style={{ animationDelay: `${k * 180}ms` }}>
+                    ★
+                  </span>
+                ))}
+              </p>
+            </div>
+            <div className="flex w-full flex-col items-center gap-2 short:min-w-0 short:flex-1">
+              <p className="text-xs opacity-80">
+                {earned < 3 ? (diff === 0 ? 'No Fácil o máximo é 2 estrelas. Tente o Normal ou o Difícil!' : 'Jogue de novo para tirar 3 estrelas!') : 'Perfeito!'}
+              </p>
+              <p className="text-[#ffe08a]">{chapter.title}</p>
+              {following ? (
+                <button onClick={() => onNext(following.id)} className="rpg-wood min-h-12 w-full px-2 py-1 text-xl short:min-h-11 short:text-lg">
+                  Próximo: {following.title}
+                </button>
+              ) : (
+                <p>Você completou a história de {saga.title}!</p>
+              )}
+              <button onClick={onExit} className="rpg-wood h-10 w-full text-base">
+                Voltar aos capítulos
               </button>
-            ) : (
-              <p>Você completou a história de {saga.title}!</p>
-            )}
-            <button onClick={onExit} className="rpg-wood h-10 w-full text-base">
-              Voltar aos capítulos
-            </button>
+            </div>
           </div>
         </div>
       )}

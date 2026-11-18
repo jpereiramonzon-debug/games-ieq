@@ -159,7 +159,7 @@ function paintScene(ctx: CanvasRenderingContext2D, w: number, kind: SceneKind) {
 // ------------------------------------------------------------------ shared UI
 
 const Box = ({ children, className, narrow }: { children: React.ReactNode; className?: string; narrow?: boolean }) => (
-  <div className={cx('rpg-frame rpg-text absolute inset-x-2 bottom-2 top-14 mx-auto flex flex-col gap-1.5 p-2', narrow ? 'max-w-2xl' : 'max-w-4xl', className)}>{children}</div>
+  <div className={cx('rpg-frame rpg-text absolute inset-x-2 bottom-2 top-14 mx-auto flex flex-col gap-1.5 overflow-y-auto p-2 short:gap-1', narrow ? 'max-w-2xl' : 'max-w-4xl', className)}>{children}</div>
 );
 const Head = ({ left, right }: { left: React.ReactNode; right?: React.ReactNode }) => (
   <span className="flex items-center justify-between gap-2 text-sm text-[#ffe08a]">
@@ -345,14 +345,14 @@ function makeBow(kind: 'sheaf' | 'star') {
         <Stage cv={cv} />
         <Box narrow className="items-center">
           <Head left={kind === 'sheaf' ? 'Feixes: todos inclinados diante do de José' : 'Céu: sol, lua e estrelas inclinados'} right={`Toques: ${moves} (ideal ≤ ${K})`} />
-          <div className="grid flex-1 gap-1.5" style={{ gridTemplateColumns: `repeat(${C}, minmax(0, 3.6rem))` }}>
+          <div className="grid min-h-0 flex-1 gap-1.5 short:gap-1" style={{ gridTemplateColumns: `repeat(${C}, minmax(0, 3.6rem))`, gridTemplateRows: `repeat(${Math.ceil(g.length / C)}, minmax(0, 3.6rem))` }}>
             {g.map((b, i) => (
               <button
                 key={i}
                 onClick={() => tap(i)}
                 aria-label={i === center ? 'José' : b ? 'Inclinado' : 'De pé'}
                 className={cx(
-                  'grid aspect-square place-items-center rounded-sm border-[3px] text-2xl transition',
+                  'grid min-h-0 place-items-center rounded-sm border-[3px] text-2xl transition short:text-xl',
                   i === center
                     ? 'border-[#e8b830] bg-[#f0d080]'
                     : b

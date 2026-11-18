@@ -22,7 +22,7 @@ const dark = (c: RGB, k: number) => mix(c, [24, 12, 20], k);
 export interface CharSpec {
   skin: string;
   hair: string;
-  hairStyle: 'curly' | 'long' | 'wavy' | 'short' | 'bald' | 'none';
+  hairStyle: 'curly' | 'long' | 'wavy' | 'short' | 'bald' | 'none' | 'flow';
   beard?: 'short' | 'long';
   tunic: string;
   sleeve: 'short' | 'long' | 'none';
@@ -36,13 +36,15 @@ export interface CharSpec {
   coat?: string[];
   /** Diagonal sash across the chest. */
   sash?: string;
-  head?: 'helmet' | 'crown' | 'hood' | 'veil' | 'turban';
+  head?: 'helmet' | 'crown' | 'hood' | 'veil' | 'turban' | 'tiara' | 'kidaris';
+  /** Feminine face: lashes and coloured lips. */
+  fem?: boolean;
   headColor?: string;
   /** Glowing eyes (the tempter). */
   glow?: string;
   /** Bandage over the eyes (the blind man). */
   bandage?: 'eyes' | 'arms';
-  props?: ('sling' | 'bag' | 'keys' | 'chains' | 'staff' | 'spear' | 'shield' | 'harp' | 'collar' | 'bracers')[];
+  props?: ('sling' | 'bag' | 'keys' | 'chains' | 'staff' | 'spear' | 'shield' | 'harp' | 'collar' | 'bracers' | 'scepter' | 'earrings' | 'scroll')[];
   cape?: string;
 }
 
@@ -119,6 +121,44 @@ export const CAST = {
   mulher: { skin: '#e0a070', hair: '#3a2010', hairStyle: 'long', tunic: '#a84a3a', sleeve: 'long', belt: '#e8d0a0', robe: true, head: 'veil', headColor: '#d8c8a0' },
   anciao: { skin: '#d8a070', hair: '#e0dcd0', hairStyle: 'short', beard: 'long', tunic: '#6a7a5a', sleeve: 'long', belt: '#4a3a28', robe: true, props: ['staff'] },
   menino: { skin: '#eaa978', hair: '#3a2416', hairStyle: 'short', tunic: '#9a7a4a', sleeve: 'short', belt: '#5e4428', build: 'slim' },
+  // Book of Esther.
+  ester: { skin: '#e2a272', hair: '#24140e', hairStyle: 'flow', fem: true, tunic: '#5a6ab8', sleeve: 'long', belt: '#e0b030', robe: true, sash: '#e8d8b0', build: 'slim', props: ['earrings'] },
+  esterRainha: {
+    skin: '#e2a272',
+    hair: '#24140e',
+    hairStyle: 'flow',
+    fem: true,
+    tunic: '#6a2a7a',
+    sleeve: 'long',
+    belt: '#f0c030',
+    robe: true,
+    sash: '#2a4a9a',
+    cape: '#8a1e3a',
+    build: 'slim',
+    head: 'tiara',
+    headColor: '#f0c030',
+    props: ['earrings'],
+  },
+  mordecai: { skin: '#d8a070', hair: '#5a5250', hairStyle: 'short', beard: 'long', tunic: '#3a5a8a', sleeve: 'long', belt: '#c8a870', robe: true, head: 'turban', headColor: '#e8e0cc', props: ['scroll'] },
+  assuero: {
+    skin: '#d49a68',
+    hair: '#1a120a',
+    hairStyle: 'wavy',
+    beard: 'long',
+    tunic: '#7a2a8a',
+    sleeve: 'long',
+    belt: '#f0c030',
+    robe: true,
+    sash: '#f0c030',
+    cape: '#2a3a8a',
+    head: 'kidaris',
+    headColor: '#f0c030',
+    props: ['scepter'],
+  },
+  hama: { skin: '#c8885a', hair: '#0e0a08', hairStyle: 'short', beard: 'long', tunic: '#5a1e1e', sleeve: 'long', belt: '#c8a040', robe: true, sash: '#1e1a24', head: 'turban', headColor: '#8a1e2a' },
+  hegai: { skin: '#b87a4a', hair: '#1a120a', hairStyle: 'bald', tunic: '#e8dcc4', sleeve: 'long', belt: '#3a8a8a', robe: true, sash: '#3a8a8a', props: ['keys'] },
+  persa: { skin: '#c8885a', hair: '#1a120a', hairStyle: 'short', beard: 'short', tunic: '#2a5a9a', sleeve: 'long', belt: '#e0b030', head: 'helmet', headColor: '#e0b030', props: ['spear', 'shield'] },
+  serva: { skin: '#d8a070', hair: '#2a1a10', hairStyle: 'long', fem: true, tunic: '#c8a868', sleeve: 'long', belt: '#8a4a2a', robe: true, head: 'veil', headColor: '#e8dcc0' },
 } satisfies Record<string, CharSpec>;
 export type CastId = keyof typeof CAST;
 
@@ -280,7 +320,7 @@ class Frame {
 
 // ------------------------------------------------------------------ poses
 
-export type Expr = 'neutral' | 'happy' | 'hurt' | 'focus' | 'closed' | 'sad';
+export type Expr = 'neutral' | 'happy' | 'hurt' | 'focus' | 'closed' | 'sad' | 'surprise' | 'talk';
 interface Limb {
   a: number;
   b: number;
@@ -303,7 +343,7 @@ export interface Pose {
   expr?: Expr;
   /** Kneeling: back knee on the ground. */
   kneel?: boolean;
-  fxk?: 'sling-spin' | 'sling-release' | 'pillar' | 'keys-glow' | 'dream' | 'bless' | 'hammer' | 'punch' | 'stars' | 'item' | 'sweat' | 'thrust';
+  fxk?: 'sling-spin' | 'sling-release' | 'pillar' | 'keys-glow' | 'dream' | 'bless' | 'hammer' | 'punch' | 'stars' | 'item' | 'sweat' | 'thrust' | 'scepter' | 'read' | 'think' | 'talk' | 'shock' | 'tear' | 'resolve';
   t?: number;
 }
 const L = (a: number, b = 0): Limb => ({ a, b });
@@ -392,16 +432,19 @@ export function renderPose(spec: CharSpec, p: Pose): ImageData {
         { contour: false },
       );
     // Long hair hanging behind the shoulders.
-    if (spec.hairStyle === 'long')
+    if (spec.hairStyle === 'long' || spec.hairStyle === 'flow') {
+      const len = spec.hairStyle === 'flow' ? 11 : 6;
       f.paint(
         new Mask().poly([
           [cx - 7, cy - 1],
           [cx - 1, cy + 2],
-          [sx - 1, sy + 6],
-          [sx - 6, sy + 5],
+          [sx - 1, sy + len],
+          [sx - 4, sy + len + 1],
+          [sx - 7, sy + len - 1],
         ]),
         spec.hair,
       );
+    }
     const armBpose = p.armB ?? L(-0.2, 0.3);
     const armB = drawArm(armBpose, true);
     if (p.kneel) {
@@ -557,9 +600,9 @@ export function renderPose(spec: CharSpec, p: Pose): ImageData {
           hair.disc(hx + off + Math.cos(ang) * 7, cy - 2 + Math.sin(ang) * 6, 1.7);
         }
         if (side) hair.disc(hx - 5.5, cy + 2.5, 2);
-      } else if (hs === 'long' || hs === 'wavy') {
+      } else if (hs === 'long' || hs === 'wavy' || hs === 'flow') {
         hair.ellipse(hx + off, cy - 2, 7.5, 6.4);
-        const drop = hs === 'long' ? 9 : 5;
+        const drop = hs === 'flow' ? 12 : hs === 'long' ? 9 : 5;
         if (side)
           hair.poly([
             [hx - 8, cy - 2],
@@ -592,7 +635,7 @@ export function renderPose(spec: CharSpec, p: Pose): ImageData {
       const fr = hair
         .copy()
         .filter((x, y) => head.has(x, y) && (side ? y < cy - 3 - Math.max(0, x - hx) * 0.45 || (x < hx - 3 && y < cy + 3) : y < cy - 3 || (Math.abs(x - hx) > 5.5 && y < cy + 2)));
-      if (hs === 'curly' || hs === 'wavy' || hs === 'long') for (let k = 0; k < 3; k++) fr.set(hx + (side ? 1 + k * 1.6 : -3 + k * 3), cy - 3 + (k % 2));
+      if (hs === 'curly' || hs === 'wavy' || hs === 'long' || hs === 'flow') for (let k = 0; k < 3; k++) fr.set(hx + (side ? 1 + k * 1.6 : -3 + k * 3), cy - 3 + (k % 2));
       f.paint(fr, spec.hair, { shade: 0.9, contour: true });
     }
     // Head coverings.
@@ -603,6 +646,19 @@ export function renderPose(spec: CharSpec, p: Pose): ImageData {
       f.paint(hm, hc, { contour: true });
       f.paint(new Mask().rect(Math.round(hx - 8), Math.round(cy - 1), 16, 1), shadeHex(hc, -0.25), { shade: 0 });
       if (spec === CAST.romano) f.paint(new Mask().ellipse(hx - 1, cy - 8.5, 5, 1.8), '#c8302a', { contour: true });
+    } else if (spec.head === 'tiara') {
+      // Delicate band with three small points and a jewel.
+      const ti = new Mask().rect(Math.round(hx - 5), Math.round(cy - 6), 10, 1);
+      for (const k of [-3, 0, 3]) ti.rect(Math.round(hx + k - (side ? 0 : 0.5)), Math.round(cy - 7 - (k === 0 ? 1 : 0)), 1, k === 0 ? 2 : 1);
+      f.paint(ti, hc, { contour: true, shade: 0.5 });
+      f.dot(hx + (side ? 1 : 0), cy - 6, '#7a3ac8');
+    } else if (spec.head === 'kidaris') {
+      // Tall Persian royal crown with crenellations.
+      const kd = new Mask().rect(Math.round(hx - 5), Math.round(cy - 12), 10, 7);
+      for (let k = 0; k < 5; k += 2) kd.rect(Math.round(hx - 5 + k * 2.2), Math.round(cy - 14), 2, 2);
+      f.paint(kd, hc, { contour: true, shade: 0.6 });
+      for (const k of [-3, 0, 3]) f.dot(hx + k, cy - 9, k === 0 ? '#c83030' : '#3a6ad8');
+      f.paint(new Mask().rect(Math.round(hx - 5), Math.round(cy - 6), 10, 1), shadeHex(hc, -0.3), { shade: 0 });
     } else if (spec.head === 'crown') {
       const cr = new Mask().rect(Math.round(hx - 5), Math.round(cy - 7), 10, 2);
       for (let k = 0; k < 4; k++) cr.rect(Math.round(hx - 5 + k * 3), Math.round(cy - 9), 1, 2);
@@ -654,6 +710,13 @@ export function renderPose(spec: CharSpec, p: Pose): ImageData {
         f.dot(x - 1, y + 1, eyeC);
         f.dot(x, y + 1, eyeC);
         f.dot(x + 1, y + 1, eyeC);
+      } else if (ex === 'surprise') {
+        f.dot(x, y - 2, eyeC);
+        f.dot(x, y - 1, eyeC);
+        f.dot(x + 1, y - 1, '#fffaf0');
+        f.dot(x, y, eyeC);
+        f.dot(x + 1, y, eyeC);
+        f.dot(x, y + 1, eyeC);
       } else if (ex === 'hurt') {
         f.dot(x - 1, y - 1, eyeC);
         f.dot(x, y, eyeC);
@@ -672,6 +735,21 @@ export function renderPose(spec: CharSpec, p: Pose): ImageData {
       f.dot(x - 1, y - 3 + (side ? 0 : tilt * (x0 < hx ? 1 : -1) * 0), bc);
       f.dot(x, y - 3 + (tilt > 0 ? 1 : 0), bc);
       f.dot(x + 1, y - 3 + (tilt > 0 ? 1 : tilt < 0 ? -1 : 0) * 0, bc);
+    }
+    if (spec.fem && !spec.glow)
+      for (const x0 of eyes) {
+        const x = Math.round(x0);
+        const y = Math.round(ey);
+        const out = side ? 2 : x0 < hx ? -1 : 2;
+        if (ex !== 'closed' && ex !== 'happy') f.dot(x + out, y - 1, eyeC);
+        else f.dot(x + out, y + 1, eyeC);
+      }
+    if (spec.props?.includes('earrings') && !back && spec.head !== 'veil') {
+      if (side) f.dot(hx - 2, cy + 4, '#f0c030');
+      else {
+        f.dot(hx - 7, cy + 4, '#f0c030');
+        f.dot(hx + 7, cy + 4, '#f0c030');
+      }
     }
     if (spec.bandage === 'eyes') {
       const bm = new Mask().rect(Math.round(hx - (side ? 2 : 7)), Math.round(ey - 1), side ? 9 : 15, 3).filter((x, y) => head.has(x, y));
@@ -700,13 +778,23 @@ export function renderPose(spec: CharSpec, p: Pose): ImageData {
     // Mouth.
     const mx = side ? hx + 4 : hx;
     const my = cy + 4.5;
-    const mc = spec.beard ? shadeHex(skin, -0.3) : '#8a3a2a';
+    const mc = spec.beard ? shadeHex(skin, -0.3) : spec.fem ? '#b83a4a' : '#8a3a2a';
     if (spec.glow) return;
     if (ex === 'happy') {
       f.dot(mx - 1, my - 1, mc);
       f.dot(mx, my, mc);
       f.dot(mx + 1, my, mc);
       if (!side) f.dot(mx + 2, my - 1, mc);
+    } else if (ex === 'surprise') {
+      f.dot(mx, my, '#5a1a1a');
+      f.dot(mx, my + 1, '#5a1a1a');
+      f.dot(mx - 1, my, mc);
+      f.dot(mx + 1, my + 1, mc);
+    } else if (ex === 'talk') {
+      f.dot(mx - 1, my, mc);
+      f.dot(mx, my, '#5a1a1a');
+      f.dot(mx + 1, my, mc);
+      f.dot(mx, my + 1, mc);
     } else if (ex === 'hurt') {
       f.dot(mx, my, '#5a1a1a');
       f.dot(mx + 1, my, '#5a1a1a');
@@ -760,6 +848,21 @@ export function renderPose(spec: CharSpec, p: Pose): ImageData {
         .line(ex + 1, ey - 8, ex + 5, ey - 6)
         .line(ex + 5, ey - 6, ex + 3, ey);
       f.paint(hp, '#e8b830', { shade: 0, contour: true });
+    }
+    if (props.includes('scepter')) {
+      const up = p.fxk === 'scepter';
+      const x1 = up ? ex + 10 : ex + 1;
+      const y1 = up ? ey - 2 : ey - 9;
+      f.paint(new Mask().line(ex, ey + (up ? 0 : 3), x1, y1), '#e8b830', { shade: 0 });
+      f.paint(new Mask().disc(x1, y1, 1.6), '#f0c830', { shade: 0.5, contour: true });
+      if (up) for (let k = 0; k < 6; k++) f.glow(x1 + Math.cos(k + t * 6) * 3, y1 + Math.sin(k + t * 6) * 3, '#fff0a0', 150);
+    }
+    if ((props.includes('scroll') && p.fxk !== 'read') || p.fxk === 'read') {
+      if (p.fxk === 'read') {
+        f.paint(new Mask().rect(Math.round(ex - 1), Math.round(ey - 6), 6, 7), '#f0e4c0', { shade: 0.4, contour: true });
+        f.paint(new Mask().rect(Math.round(ex - 2), Math.round(ey - 7), 8, 1).rect(Math.round(ex - 2), Math.round(ey + 1), 8, 1), '#c8a060', { shade: 0 });
+        for (let k = 0; k < 3; k++) f.paint(new Mask().rect(Math.round(ex), Math.round(ey - 5 + k * 2), 4, 1), '#8a6a4a', { shade: 0 });
+      } else f.paint(new Mask().rect(Math.round(ex - 1), Math.round(ey), 3, 5), '#f0e4c0', { shade: 0.3, contour: true });
     }
     if (props.includes('sling') && !p.fxk?.startsWith('sling')) {
       f.paint(new Mask().line(ex, ey + 1, ex - 1, ey + 5), '#8a5a2a', { shade: 0 });
@@ -830,6 +933,27 @@ export function renderPose(spec: CharSpec, p: Pose): ImageData {
         f.paint(new Mask().disc(ex, ey - 3, 2), '#5ac0ff', { contour: true });
         f.glow(ex, ey - 6, '#ffffff', 200);
         break;
+      case 'think':
+        for (let k = 0; k < 2; k++) f.glow(cx + 7 + k * 2, cy - 4 - k * 2, '#ffffff', 140 + k * 50);
+        f.paint(new Mask().ellipse(cx + 13, cy - 8, 3, 2), '#ffffff', { shade: 0.3, contour: true });
+        f.dot(cx + 13, cy - 8, '#5a6ab8');
+        break;
+      case 'talk':
+        f.glow(cx + 9, cy + 2 - (t > 0.5 ? 1 : 0), '#ffffff', 170);
+        f.glow(cx + 11, cy + 1 - (t > 0.5 ? 1 : 0), '#ffffff', 120);
+        break;
+      case 'shock':
+        f.paint(new Mask().rect(Math.round(cx + 10), Math.round(cy - 9), 2, 4), '#ffe066', { shade: 0, contour: true });
+        f.paint(new Mask().rect(Math.round(cx + 10), Math.round(cy - 3), 2, 2), '#ffe066', { shade: 0, contour: true });
+        f.glow(cx - 8, cy - 5, '#ffffff', 160);
+        f.glow(cx + 7, cy - 7, '#ffffff', 160);
+        break;
+      case 'tear':
+        f.glow(cx + (view === 'side' ? 4 : 3), cy + 3 + Math.round(t * 3), '#7ac8ff', 230);
+        break;
+      case 'resolve':
+        for (let k = 0; k < 10; k++) f.glow(cx + Math.cos(k * 0.63) * 12, cy + 8 + Math.sin(k * 0.63) * 15, '#ffe8a0', 70 + (k % 2) * 40);
+        break;
       case 'sweat':
         f.glow(cx + 7, cy - 3, '#bfe4ff', 220);
         f.glow(cx + 8, cy - 2, '#bfe4ff', 160);
@@ -874,7 +998,13 @@ export type Anim =
   | 'defeat'
   | 'climb'
   | 'attack'
-  | 'special';
+  | 'special'
+  | 'talk'
+  | 'read'
+  | 'think'
+  | 'surprise'
+  | 'sad'
+  | 'brave';
 
 export const ANIMS: Record<Anim, { frames: number; fps: number; loop: boolean }> = {
   idleFront: { frames: 4, fps: 5, loop: true },
@@ -894,10 +1024,16 @@ export const ANIMS: Record<Anim, { frames: number; fps: number; loop: boolean }>
   climb: { frames: 4, fps: 8, loop: true },
   attack: { frames: 4, fps: 14, loop: false },
   special: { frames: 6, fps: 8, loop: true },
+  talk: { frames: 4, fps: 6, loop: true },
+  read: { frames: 4, fps: 3, loop: true },
+  think: { frames: 4, fps: 3, loop: true },
+  surprise: { frames: 3, fps: 9, loop: false },
+  sad: { frames: 4, fps: 3, loop: true },
+  brave: { frames: 4, fps: 6, loop: true },
 };
 
 /** The special move of each hero (and the attack, when they have one). */
-const SPECIAL: Partial<Record<CastId, 'sling' | 'pillar' | 'keys' | 'dream' | 'bless' | 'hammer' | 'thrust' | 'harp'>> = {
+const SPECIAL: Partial<Record<CastId, 'sling' | 'pillar' | 'keys' | 'dream' | 'bless' | 'hammer' | 'thrust' | 'harp' | 'scepter'>> = {
   davi: 'sling',
   daviRei: 'harp',
   sansao: 'pillar',
@@ -910,6 +1046,8 @@ const SPECIAL: Partial<Record<CastId, 'sling' | 'pillar' | 'keys' | 'dream' | 'b
   soldado: 'thrust',
   romano: 'thrust',
   guarda: 'thrust',
+  persa: 'thrust',
+  assuero: 'scepter',
 };
 
 export function poseFor(id: CastId, anim: Anim, i: number): Pose {
@@ -997,6 +1135,20 @@ export function poseFor(id: CastId, anim: Anim, i: number): Pose {
         { crouch: 4, lean: 2, headDy: 2, legF: L(1.1, 1.9), kneel: true, armF: L(0.5, 0.2), armB: L(0.4, 0.2), expr: 'closed' as Expr },
         { crouch: 5, lean: 3, headDy: 3, headDx: 1, legF: L(1.2, 2.0), kneel: true, armF: L(0.9, 0.1), armB: L(0.7, 0.1), expr: 'closed' as Expr },
       ][i];
+    case 'talk':
+      return { by: i === 2 ? 1 : 0, armF: L(i % 2 ? 1.1 : 0.7, i % 2 ? 1.2 : 0.8), armB: L(-0.1, 0.3), legF: L(0.1), legB: L(-0.1), expr: i % 2 ? 'talk' : 'neutral', fxk: 'talk', t: i / 4 };
+    case 'read':
+      return { by: i === 3 ? 1 : 0, headDy: 1, armF: L(1.0, 1.1), armB: L(0.6, 1.4), legF: L(0.1), legB: L(-0.1), expr: i === 2 ? 'closed' : 'focus', fxk: 'read' };
+    case 'think':
+      return { by: i >= 2 ? 1 : 0, armF: L(0.6, 2.6), armB: L(0.3, 1.6), legF: L(0.1), legB: L(-0.1), expr: i === 3 ? 'closed' : 'focus', fxk: i > 0 ? 'think' : undefined };
+    case 'surprise':
+      return i === 0
+        ? { by: 0, lean: -1, armF: L(0.6, 0.6), armB: L(0.2, 0.4), legF: L(0.1), legB: L(-0.1), expr: 'surprise' }
+        : { by: -1, lean: -2, headDx: -1, armF: L(2.2, 1.8), armB: L(1.8, 1.6), legF: L(0.15), legB: L(-0.2), expr: 'surprise', fxk: 'shock' };
+    case 'sad':
+      return { by: 1, headDy: 2, lean: 1, armF: L(0.25, 0.3), armB: L(0.15, 0.3), legF: L(0.05), legB: L(-0.05), expr: i === 3 ? 'closed' : 'sad', fxk: 'tear', t: i / 4 };
+    case 'brave':
+      return { by: i % 2 ? -1 : 0, lean: -1, armF: L(i < 2 ? 0.6 : 1.4, i < 2 ? 1.6 : 0.6), armB: L(-0.3, 0.4), legF: L(0.35), legB: L(-0.3), expr: 'focus', fxk: 'resolve' };
     case 'climb':
       return { view: 'back', armF: L(i % 2 ? 2.8 : 0.5, 0), armB: L(i % 2 ? 0.5 : 2.8, 0), legF: L(0, i % 2 ? 1 : 0), legB: L(0, i % 2 ? 0 : 1), by: i % 2 };
     case 'attack': {
@@ -1036,6 +1188,7 @@ export function poseFor(id: CastId, anim: Anim, i: number): Pose {
       if (k === 'dream') return { by: i % 3 === 0 ? 0 : 1, armF: L(2.4, 2.0), armB: L(2.2, 2.0), legF: L(0.1), legB: L(-0.1), expr: 'closed', fxk: 'dream', t };
       if (k === 'bless') return { by: i % 3 === 0 ? 0 : 1, armF: L(2.0, -0.1), armB: L(1.7, -0.1), legF: L(0.1), legB: L(-0.1), expr: 'happy', fxk: 'bless', t };
       if (k === 'harp') return { by: i % 2, armF: L(1.1, 1.2), armB: L(0.9, 1.4 + (i % 2) * 0.3), legF: L(0.1), legB: L(-0.1), expr: i % 3 ? 'closed' : 'happy' };
+      if (k === 'scepter') return { by: i % 2, lean: 1, armF: L(1.5 - (i < 2 ? (1 - i) * 0.6 : 0), 0.05), armB: L(-0.1, 0.3), legF: L(0.15), legB: L(-0.1), expr: i > 1 ? 'happy' : 'neutral', fxk: 'scepter', t };
       if (k === 'hammer') return { lean: 1, armF: i < 3 ? L(2.6 - i * 0.2, 0.6) : L(1.2, 0.4), armB: L(0.5, 0.4), legF: L(0.3), legB: L(-0.3), expr: 'focus', fxk: 'hammer' };
       return poseFor(id, 'attack', Math.min(3, i));
     }
@@ -1093,6 +1246,12 @@ export const SHEET_ROWS: [string, Anim, boolean][] = [
   ['climb', 'climb', false],
   ['attack', 'attack', false],
   ['special', 'special', false],
+  ['talk', 'talk', false],
+  ['read', 'read', false],
+  ['think', 'think', false],
+  ['surprise', 'surprise', false],
+  ['sad', 'sad', false],
+  ['brave', 'brave', false],
 ];
 
 // ------------------------------------------------------------------ any "look" in the new style

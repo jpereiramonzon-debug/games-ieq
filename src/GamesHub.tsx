@@ -11,13 +11,14 @@ import Samson from './games/samson/Samson';
 import Peter from './games/peter/Peter';
 import Noah from './games/noah/Noah';
 import Joseph from './games/joseph/Joseph';
+import Esther from './games/esther/Esther';
 import { useBgm } from './games/bgm';
 import Life from './games/life/Life';
 import { heroCard } from './games/pixel/heroes';
 import { useT } from './i18n';
 import { useStore } from './store';
 
-export type GameId = 'joseph' | 'life' | 'peter' | 'noah' | 'samson' | 'david' | 'run' | 'quest' | 'carpenter';
+export type GameId = 'esther' | 'joseph' | 'life' | 'peter' | 'noah' | 'samson' | 'david' | 'run' | 'quest' | 'carpenter';
 
 export default function GamesHub({ game, setGame }: { game: GameId | null; setGame: (g: GameId | null) => void }) {
   const t = useT();
@@ -30,6 +31,7 @@ export default function GamesHub({ game, setGame }: { game: GameId | null; setGa
   const noe = useStore((s) => s.noahDone);
   const vida = useStore((s) => s.lifeDone);
   const jose = useStore((s) => s.josephDone);
+  const ester = useStore((s) => s.estherDone);
   const [hero, setHero] = useState<'jesus' | null>(() => (game && ['life', 'run', 'quest', 'carpenter'].includes(game) ? 'jesus' : null));
   useBgm(game === null ? 'menu' : null, 0);
   const back = () => setGame(null);
@@ -38,6 +40,7 @@ export default function GamesHub({ game, setGame }: { game: GameId | null; setGa
   if (game === 'peter') return <Peter onBack={back} />;
   if (game === 'noah') return <Noah onBack={back} />;
   if (game === 'joseph') return <Joseph onBack={back} />;
+  if (game === 'esther') return <Esther onBack={back} />;
   if (game === 'life') return <Life onBack={back} />;
   if (game === 'carpenter') return <Carpenter onBack={back} />;
   if (game === 'quest') return <JesusQuest onBack={back} />;
@@ -143,11 +146,12 @@ export default function GamesHub({ game, setGame }: { game: GameId | null; setGa
     { id: 'peter' as const, name: 'Pedro', img: heroCard('pedro'), done: pedro.length, total: 6 },
     { id: 'noah' as const, name: 'Noé', img: heroCard('noe'), done: noe.length, total: 5 },
     { id: 'joseph' as const, name: 'José', img: heroCard('jose'), done: jose.length, total: 7 },
+    { id: 'esther' as const, name: 'Ester', img: heroCard('ester'), done: ester.length, total: 10 },
   ];
   return (
     <div className="mx-auto max-w-4xl">
       <p className="font-pixel mb-2 px-1 text-xl">{t('games.heroes')}</p>
-      <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+      <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-7">
         {heroes.map((h) => (
           <button
             key={h.id}

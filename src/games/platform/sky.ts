@@ -47,7 +47,7 @@ const toHex = (c: string) => {
 };
 
 /** Base colours of the far and middle layers for each theme. */
-const LAYERS: Record<ThemeId, { far: string; mid: string; kind: 'hills' | 'dunes' | 'columns' | 'rock' | 'sea' | 'town' }> = {
+const LAYERS: Record<ThemeId, { far: string; mid: string; kind: 'hills' | 'dunes' | 'columns' | 'rock' | 'sea' | 'town' | 'persian' | 'garden' | 'apadana' }> = {
   village: { far: '#8aa8a0', mid: '#5a8a4a', kind: 'hills' },
   desert: { far: '#d8b088', mid: '#c89a5a', kind: 'dunes' },
   egypt: { far: '#d8b088', mid: '#b88a48', kind: 'dunes' },
@@ -56,6 +56,9 @@ const LAYERS: Record<ThemeId, { far: string; mid: string; kind: 'hills' | 'dunes
   cave: { far: '#3a3026', mid: '#4a3e32', kind: 'rock' },
   shore: { far: '#6a9ac8', mid: '#3a6a9a', kind: 'sea' },
   night: { far: '#3a4a6a', mid: '#2a3448', kind: 'town' },
+  persia: { far: '#9a8aa0', mid: '#c8a070', kind: 'persian' },
+  garden: { far: '#8aa8a0', mid: '#2e6a3a', kind: 'garden' },
+  susa: { far: '#5a3a58', mid: '#d8c8a8', kind: 'apadana' },
 };
 
 const strips = new Map<string, { far: HTMLCanvasElement; mid: HTMLCanvasElement }>();
@@ -97,6 +100,27 @@ function stripsFor(theme: ThemeId, time: TimeOfDay) {
     f.fillRect(0, 128, SW, 72);
     f.fillStyle = shadeDark(tone('#8ac0e8', 0.2));
     for (let i = 0; i < 60; i++) f.fillRect((i * 97) % SW, 132 + ((i * 37) % 60), 6 + (i % 3) * 3, 1);
+  } else if (L.kind === 'apadana') {
+    // Inner wall of the palace hall with tall arched windows open to the sky.
+    f.fillStyle = farCol;
+    f.fillRect(0, 0, SW, 200);
+    for (let x = 40; x < SW; x += 160) {
+      f.clearRect(x, 40, 34, 70);
+      f.save();
+      f.globalCompositeOperation = 'destination-out';
+      f.beginPath();
+      f.arc(x + 17, 40, 17, Math.PI, 0);
+      f.fill();
+      f.restore();
+      f.fillStyle = toHex(mixHex(farCol, '#e8b830', 0.35));
+      f.fillRect(x - 3, 108, 40, 4);
+      f.fillRect(x + 16, 24, 2, 86);
+      f.fillStyle = farCol;
+    }
+    for (let x = 0; x < SW; x += 6) {
+      f.fillStyle = toHex(mixHex(farCol, ['#3a5ab0', '#e8b830', '#ffffff'][(x / 6) % 3], 0.3));
+      f.fillRect(x, 150, 4, 4);
+    }
   } else ridge(f, 118, L.kind === 'dunes' ? 26 : 42, L.kind === 'dunes' ? 2 : 3, farCol);
   if (theme === 'egypt')
     for (const [px, s] of [
@@ -151,6 +175,113 @@ function stripsFor(theme: ThemeId, time: TimeOfDay) {
       m.fillRect(x, 120, 3, 36);
       m.fillStyle = shadeDark(tone('#5a8a32', 0.1));
       for (let k = -3; k <= 3; k++) m.fillRect(x - 14 + k * 3 + 2, 116 + Math.abs(k) * 3, 12, 3);
+    }
+  } else if (L.kind === 'persian') {
+    // Susa: terraces, stepped battlements, arched gates and palms.
+    const brick = shadeDark(tone('#d8b888', 0.15));
+    const glaze = shadeDark(tone('#2a5ab0', 0.1));
+    const gold = shadeDark(tone('#e8b830', 0.1));
+    for (let x = 0; x < SW; x += 70) {
+      const h = 34 + ((x * 37) % 46);
+      const w = 52 + ((x * 13) % 18);
+      m.fillStyle = brick;
+      m.fillRect(x, 168 - h, w, h + 40);
+      // Stepped merlons.
+      for (let k = 0; k < w; k += 8) {
+        m.fillRect(x + k, 164 - h, 5, 4);
+        m.fillRect(x + k + 1, 161 - h, 3, 3);
+      }
+      m.fillStyle = glaze;
+      m.fillRect(x, 176 - h, w, 4);
+      m.fillStyle = gold;
+      for (let k = 3; k < w; k += 8) m.fillRect(x + k, 177 - h, 2, 2);
+      m.fillStyle = shadeDark('#2a1a14');
+      m.fillRect(x + w / 2 - 5, 182 - h + h * 0.4, 10, 30);
+      m.beginPath();
+      m.arc(x + w / 2, 182 - h + h * 0.4, 5, Math.PI, 0);
+      m.fill();
+    }
+    // Palace on its terrace.
+    m.fillStyle = shadeDark(tone('#e8d8b8', 0.1));
+    m.fillRect(380, 80, 200, 120);
+    for (let x = 390; x < 580; x += 16) {
+      m.fillStyle = shadeDark(tone('#f4ecd8', 0.1));
+      m.fillRect(x, 60, 6, 40);
+      m.fillStyle = gold;
+      m.fillRect(x - 2, 58, 10, 3);
+    }
+    m.fillStyle = shadeDark(tone('#8a2a5a', 0.1));
+    m.fillRect(380, 54, 200, 5);
+    for (const x of [60, 300, 640, 880]) {
+      m.fillStyle = shadeDark('#5a3a1e');
+      m.fillRect(x, 120, 3, 60);
+      m.fillStyle = shadeDark(tone('#4a8a32', 0.1));
+      for (let k = -3; k <= 3; k++) m.fillRect(x - 14 + k * 3 + 2, 116 + Math.abs(k) * 3, 12, 3);
+    }
+  } else if (L.kind === 'garden') {
+    ridge(m, 176, 6, 4, shadeDark(tone('#3a7a3a', 0.1)), 0.7);
+    // Pavilion with a dome and slender columns.
+    const stone = shadeDark(tone('#ece0c8', 0.1));
+    for (const px of [240, 700]) {
+      m.fillStyle = stone;
+      m.fillRect(px, 96, 80, 6);
+      for (let k = 0; k < 5; k++) m.fillRect(px + 4 + k * 17, 102, 5, 60);
+      m.beginPath();
+      m.arc(px + 40, 96, 26, Math.PI, 0);
+      m.fill();
+      m.fillStyle = shadeDark(tone('#2a5ab0', 0.15));
+      m.fillRect(px + 2, 92, 76, 3);
+      m.fillStyle = shadeDark(tone('#e8b830', 0.1));
+      m.fillRect(px + 39, 64, 2, 8);
+    }
+    // Cypresses and round shrubs.
+    for (let i = 0; i < 16; i++) {
+      const x = (i * 61 + 20) % SW;
+      if ((x > 230 && x < 330) || (x > 690 && x < 790)) continue;
+      const h = 50 + ((i * 17) % 30);
+      m.fillStyle = midCol;
+      m.beginPath();
+      m.ellipse(x, 176 - h / 2, 7, h / 2, 0, 0, Math.PI * 2);
+      m.fill();
+      m.fillStyle = toHex(mixHex(midCol, '#ffffff', 0.12));
+      m.fillRect(x - 3, 180 - h, 2, h * 0.7);
+    }
+    // Fountain.
+    m.fillStyle = stone;
+    m.fillRect(470, 160, 50, 8);
+    m.fillRect(490, 140, 10, 20);
+    m.fillStyle = shadeDark(tone('#7ac0e8', 0.1));
+    m.fillRect(474, 158, 42, 3);
+    m.fillRect(494, 132, 2, 10);
+  } else if (L.kind === 'apadana') {
+    // Hall of columns with bull capitals and the hangings of Esther 1:6.
+    const stone = midCol;
+    for (let x = 20; x < SW; x += 110) {
+      m.fillStyle = stone;
+      m.fillRect(x, 30, 14, 170);
+      m.fillStyle = toHex(mixHex(stone, '#000000', 0.22));
+      m.fillRect(x + 10, 30, 4, 170);
+      for (let y = 40; y < 190; y += 8) m.fillRect(x + 4, y, 1, 5);
+      // Double-bull capital.
+      m.fillStyle = shadeDark(tone('#8a6a4a', 0.1));
+      m.fillRect(x - 10, 22, 34, 9);
+      m.fillRect(x - 13, 26, 5, 6);
+      m.fillRect(x + 22, 26, 5, 6);
+      m.fillStyle = shadeDark(tone('#e8b830', 0.1));
+      m.fillRect(x - 10, 20, 34, 2);
+      // Hangings: white, green and blue on purple cords.
+      const cols = ['#f0ece0', '#3a8a5a', '#2a5ab0'];
+      for (let k = 0; k < 3; k++) {
+        m.fillStyle = shadeDark(tone(cols[k], 0.15));
+        m.beginPath();
+        m.moveTo(x + 14 + k * 30, 34);
+        m.quadraticCurveTo(x + 29 + k * 30, 58, x + 44 + k * 30, 34);
+        m.lineTo(x + 44 + k * 30, 40);
+        m.quadraticCurveTo(x + 29 + k * 30, 64, x + 14 + k * 30, 40);
+        m.fill();
+      }
+      m.fillStyle = shadeDark(tone('#7a2a8a', 0.1));
+      m.fillRect(x + 14, 33, 96, 2);
     }
   } else if (L.kind === 'columns') {
     ridge(m, 170, 6, 5, midCol, 0.5);
@@ -276,4 +407,4 @@ export function drawLights(ctx: CanvasRenderingContext2D, w: number, h: number, 
 }
 
 /** Default time of day for a theme. */
-export const themeTime = (theme: ThemeId): TimeOfDay => (theme === 'night' ? 'night' : theme === 'cave' ? 'night' : theme === 'palace' ? 'sunset' : 'day');
+export const themeTime = (theme: ThemeId): TimeOfDay => (theme === 'night' ? 'night' : theme === 'cave' ? 'night' : theme === 'palace' || theme === 'susa' ? 'sunset' : 'day');

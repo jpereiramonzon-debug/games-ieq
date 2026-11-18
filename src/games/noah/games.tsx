@@ -256,7 +256,7 @@ function AnimalIcon({ a }: { a: Animal }) {
     ctx.clearRect(0, 0, 44, 44);
     drawAnimal(ctx, a, 20, a === 'giraffe' ? 42 : 34);
   }, [a]);
-  return <canvas ref={ref} width={44} height={44} className="pixelated h-full w-full" aria-label={ANIMAL_NAME[a]} />;
+  return <canvas ref={ref} width={44} height={44} className="pixelated h-full max-h-full w-full min-h-0 object-contain" aria-label={ANIMAL_NAME[a]} />;
 }
 
 export function Pairs({ paused, onWin, diff = 1 }: GameProps) {
@@ -341,7 +341,10 @@ export function Pairs({ paused, onWin, diff = 1 }: GameProps) {
             Pares na arca: {found.length}/{ANIMALS.length} · erros: {misses}
             {MISSES < 99 && `/${MISSES}`}
           </Panel>
-          <div className="absolute bottom-2 left-[max(0.5rem,env(safe-area-inset-left))] top-14 grid w-[min(52%,24rem)] grid-cols-4 gap-1.5">
+          <div
+            className="absolute bottom-2 left-[max(3.5rem,calc(env(safe-area-inset-left)+3rem))] top-14 grid w-[min(52%,24rem)] grid-cols-4 gap-1.5"
+            style={{ gridTemplateRows: `repeat(${Math.ceil(deck.length / 4)}, minmax(0, 1fr))` }}
+          >
             {deck.map((c, i) => {
               const shown = peek || open.includes(i) || found.includes(c.a);
               return (
@@ -349,7 +352,7 @@ export function Pairs({ paused, onWin, diff = 1 }: GameProps) {
                   key={c.id}
                   onClick={() => flip(i)}
                   aria-label={shown ? ANIMAL_NAME[c.a] : 'Carta virada'}
-                  className={cx('rpg-wood grid place-items-center p-1 transition', shown ? 'bg-[#ead8b2]' : 'hover:brightness-110', found.includes(c.a) && 'opacity-60')}
+                  className={cx('rpg-wood grid min-h-0 place-items-center overflow-hidden p-1 transition', shown ? 'bg-[#ead8b2]' : 'hover:brightness-110', found.includes(c.a) && 'opacity-60')}
                 >
                   {shown ? <AnimalIcon a={c.a} /> : <span className="rpg-text text-2xl text-[#ffe08a]">?</span>}
                 </button>

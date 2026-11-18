@@ -70,13 +70,15 @@ export function Panel({ children, className }: { children: ReactNode; className?
 
 export function Retry({ text, onRetry, look }: { text: string; onRetry: () => void; look: Look }) {
   return (
-    <div className="absolute inset-0 z-10 grid place-items-center bg-black/50 p-4">
-      <div className="rpg-frame rpg-text flex max-w-md flex-col items-center gap-3 p-4 text-center text-lg">
-        <Portrait look={look} mood="sad" className="h-20 w-20" />
-        {text}
-        <button onClick={onRetry} className="rpg-wood h-12 w-full text-xl active:translate-y-0.5">
-          Tentar de novo
-        </button>
+    <div className="absolute inset-0 z-10 flex overflow-y-auto bg-black/50 p-4 short:p-2">
+      <div className="rpg-frame rpg-text m-auto flex max-w-md flex-col items-center gap-3 p-4 text-center text-lg short:max-w-xl short:flex-row short:p-3 short:text-base">
+        <Portrait look={look} mood="sad" className="h-20 w-20 short:h-14 short:w-14" />
+        <div className="flex flex-col items-center gap-3 short:gap-2">
+          {text}
+          <button onClick={onRetry} className="rpg-wood h-12 w-full text-xl active:translate-y-0.5 short:h-11">
+            Tentar de novo
+          </button>
+        </div>
       </div>
     </div>
   );

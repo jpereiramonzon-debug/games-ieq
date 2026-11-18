@@ -25,6 +25,7 @@ export interface State {
   noahDone: string[];
   lifeDone: string[];
   josephDone: string[];
+  estherDone: string[];
   /** Background music in the story games. */
   bgm: boolean;
   /** 0 easy, 1 normal, 2 hard. */
@@ -51,6 +52,7 @@ const defaults: State = {
   noahDone: [],
   lifeDone: [],
   josephDone: [],
+  estherDone: [],
   bgm: true,
   storyDiff: 1,
   stars: {},
