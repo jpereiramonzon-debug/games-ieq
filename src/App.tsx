@@ -15,6 +15,7 @@ export default function App() {
   const volume = useStore((s) => s.volume);
   const bgm = useStore((s) => s.bgm);
   const voice = useStore((s) => s.jesusVoice);
+  const storyVoices = useStore((s) => s.storyVoices);
 
   useEffect(() => {
     document.documentElement.lang = lang === 'pt' ? 'pt-BR' : lang;
@@ -63,6 +64,7 @@ export default function App() {
             />
             <Slider label="Volume" value={volume} onChange={(v) => set({ volume: v })} />
             <Toggle label="Música de fundo" checked={bgm} onChange={(v) => set({ bgm: v })} />
+            <Toggle label="Vozes dos personagens" checked={storyVoices} onChange={(v) => set({ storyVoices: v })} />
             <Toggle label="Voz de Jesus" checked={voice} onChange={(v) => set({ jesusVoice: v })} />
             <OfflineStatus />
           </div>

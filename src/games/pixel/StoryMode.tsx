@@ -12,6 +12,7 @@ import type { Look } from './person';
 import type { GameProps } from './stage';
 import { RotateHint } from './orientation';
 import { setSpeaker } from './speaker';
+import { preloadLine, speakLine, stopLine } from './voices';
 import { useBgm, type Track } from '../bgm';
 import { Platform } from '../platform/Platform';
 import { Cinematic } from '../platform/Cinematic';
@@ -237,9 +238,17 @@ function Talk({ lines, speakers, onDone, onLine, log }: { lines: SLine[]; speake
     if (!l) return;
     onLine?.(l);
     setSpeaker({ who: l.who, mood: l.mood });
+    speakLine(l.text);
+    preloadLine(lines[i + 1]?.text);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [i, lines]);
-  useEffect(() => () => setSpeaker(null), []);
+  useEffect(
+    () => () => {
+      setSpeaker(null);
+      stopLine();
+    },
+    [],
+  );
   const typing = useRef({ done: true, finish: () => {} });
   const line = lines[i];
   const next = () => {

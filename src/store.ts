@@ -14,6 +14,8 @@ export interface State {
   volume: number;
   /** Recorded voice of Jesus in the games. */
   jesusVoice: boolean;
+  /** Recorded voices of the characters in the story dialogs. */
+  storyVoices: boolean;
   best: Record<string, number>;
   /** Stars per stage in Corrida da Fé. */
   runStars: Record<string, number>;
@@ -42,6 +44,7 @@ const defaults: State = {
   lang: 'pt',
   volume: 0.8,
   jesusVoice: true,
+  storyVoices: true,
   best: {},
   runStars: {},
   questDone: [],

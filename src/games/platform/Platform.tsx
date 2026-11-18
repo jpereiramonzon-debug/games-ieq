@@ -10,6 +10,7 @@
  * the sick and the tempter's shadows flee from his blessing, Noé avoids beasts.
  */
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { speakLine, stopLine } from '../pixel/voices';
 import { engine } from '../../audio/engine';
 import { cx } from '../../ui/kit';
 import { Joystick } from '../pixel/Controls';
@@ -1272,7 +1273,7 @@ export function Platform({ spec, cast, style, paused, onWin, diff = 1 }: Platfor
   const action = () => {
     const s = st.current;
     if (paused || lost || s.won || s.dead > 0) return;
-    if (talk) return setTalk(null);
+    if (talk) return stopLine(), setTalk(null);
     const nr = near();
     if (!nr) return;
     if (nr.kind === 'lever') {
@@ -1340,6 +1341,7 @@ export function Platform({ spec, cast, style, paused, onWin, diff = 1 }: Platfor
     } else if (nr.kind === 'npc') {
       const text = spec.npc?.[nr.n.i] ?? spec.goal ?? 'A paz! Siga em frente: a saída fica do outro lado.';
       setTalk({ text, look: nr.n.look });
+      speakLine(text);
       s.action = { anim: 'interact', t: 0, hit: true };
       engine.playNote(84, 'bell', 0, 0.2);
     } else if (nr.kind === 'attack') {
@@ -1366,7 +1368,13 @@ export function Platform({ spec, cast, style, paused, onWin, diff = 1 }: Platfor
       if (k === ' ' || k === 'z') jumpHeld.current = false;
     },
   );
-  useEffect(() => () => void (jumpHeld.current = false), []);
+  useEffect(
+    () => () => {
+      jumpHeld.current = false;
+      stopLine();
+    },
+    [],
+  );
   const s = st.current;
   const nr = !paused ? near() : null;
   const label = !nr ? 'Ação' : { lever: 'Alavanca', seq: 'Alavanca', dial: 'Girar', heal: 'Curar', bless: 'Abençoar', npc: 'Falar', attack: style === 'sling' ? 'Funda' : 'Soco' }[nr.kind];
@@ -1418,7 +1426,7 @@ export function Platform({ spec, cast, style, paused, onWin, diff = 1 }: Platfor
         </>
       )}
       {talk && (
-        <div className="absolute inset-x-2 bottom-2 z-10 mx-auto flex max-w-3xl items-stretch gap-2" onClick={() => setTalk(null)}>
+        <div className="absolute inset-x-2 bottom-2 z-10 mx-auto flex max-w-3xl items-stretch gap-2" onClick={() => (stopLine(), setTalk(null))}>
           <Portrait look={talk.look} className="h-20 w-20" />
           <div className="rpg-frame rpg-text flex-1 px-3 py-2 text-lg leading-snug">{talk.text}</div>
         </div>

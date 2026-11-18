@@ -22,6 +22,8 @@ import { get, useStore } from '../store';
 export type Track = 'menu' | 'davi' | 'sansao' | 'pedro' | 'noite' | 'noe' | 'jesus' | 'getsemani' | 'canaa' | 'deserto' | 'egito' | 'prisao' | 'reencontro' | 'enigma';
 
 const VOL = 0.32;
+/** Music level while a character's recorded line plays (1 = normal). */
+let duckK = 1;
 const FADE_IN = 0.9;
 const FADE_OUT = 0.4;
 const CACHE = 'aurapads-music-v1';
@@ -179,13 +181,19 @@ function attachGraph() {
     try {
       const src = ctx.createMediaElementSource(d.el);
       d.gain = ctx.createGain();
-      d.gain.gain.value = d === active && !d.el.paused ? VOL : 0;
+      d.gain.gain.value = d === active && !d.el.paused ? VOL * duckK : 0;
       src.connect(d.gain).connect(ctx.destination);
       d.el.volume = 1;
     } catch {
       d.gain = null; // already attached or unsupported: fall back to element volume
     }
   }
+}
+
+/** Lower the music while someone speaks, and bring it back afterwards. */
+export function duckBgm(on: boolean) {
+  duckK = on ? 0.35 : 1;
+  if (active && !active.el.paused) setLevel(active, VOL * duckK, on ? 0.2 : 0.6);
 }
 
 function setLevel(d: Deck, to: number, secs: number) {
@@ -295,7 +303,7 @@ function start(deck: Deck, track: string, g: number) {
         lastError = null;
         failed.delete(track);
         retried.delete(track);
-        setLevel(deck, VOL, FADE_IN);
+        setLevel(deck, VOL * duckK, FADE_IN);
       });
     })
     .catch((err: unknown) => {
