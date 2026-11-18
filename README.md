@@ -19,6 +19,10 @@ npm run dev
 
 `npm run build` gera o site em `dist/` (Vite + React + Tailwind).
 
+## Jogar offline
+
+Depois de abrir o site uma vez com internet, os jogos ficam salvos no aparelho e funcionam sem conexão (inclusive instalado na tela inicial). O service worker (`sw/sw.js`, montado no build com a lista de arquivos) guarda o app, as imagens, os sprites e as vozes; as músicas são baixadas em segundo plano por `src/offline.ts`. As configurações mostram o andamento em "Jogar offline". Cada novo deploy é baixado na próxima vez que o app abrir com internet.
+
 ## Estrutura
 
 - `src/games/pixel` — kit compartilhado: palco, controles, diálogos, modo história.

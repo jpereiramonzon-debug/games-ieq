@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
-import { Settings } from 'lucide-react';
+import { Settings, WifiOff } from 'lucide-react';
 import { engine } from './audio/engine';
 import GamesHub, { type GameId } from './GamesHub';
 import { useT } from './i18n';
+import { offlineState, useOffline } from './offline';
 import { get, set, useStore, type Lang } from './store';
 import { Segmented, Sheet, Slider, Toggle } from './ui/kit';
 
@@ -63,6 +64,7 @@ export default function App() {
             <Slider label="Volume" value={volume} onChange={(v) => set({ volume: v })} />
             <Toggle label="Música de fundo" checked={bgm} onChange={(v) => set({ bgm: v })} />
             <Toggle label="Voz de Jesus" checked={voice} onChange={(v) => set({ jesusVoice: v })} />
+            <OfflineStatus />
           </div>
         </Sheet>
       )}
@@ -70,5 +72,32 @@ export default function App() {
   );
 }
 
+/** Shows whether the games are saved on this device for playing without internet. */
+function OfflineStatus() {
+  const o = useOffline();
+  if (o.app === 'unsupported') return null;
+  const full = o.app === 'ready' && o.musicDone >= o.musicTotal;
+  const text =
+    o.app === 'error'
+      ? 'Não foi possível salvar para jogar offline neste navegador.'
+      : o.app === 'preparing'
+        ? 'Salvando os jogos neste aparelho…'
+        : full
+          ? 'Pronto! Os jogos funcionam sem internet.'
+          : o.downloading
+            ? `Os jogos já funcionam sem internet. Baixando as músicas… ${o.musicDone}/${o.musicTotal}`
+            : `Os jogos já funcionam sem internet. Músicas salvas: ${o.musicDone}/${o.musicTotal} (conecte-se para baixar o resto).`;
+  return (
+    <div className="flex items-start gap-3 rounded-xl bg-surface p-3 text-sm" role="status">
+      <WifiOff size={18} className={full ? 'mt-0.5 shrink-0 text-good' : 'mt-0.5 shrink-0 text-muted'} />
+      <div>
+        <div className="font-semibold">Jogar offline</div>
+        <div className="text-muted">{text}</div>
+      </div>
+    </div>
+  );
+}
+
 // Handy while developing and in tests: window.aura.get() / window.aura.set().
 if (import.meta.env.DEV) (window as unknown as { aura: unknown }).aura = { engine, get, set };
+(window as unknown as { __offline: unknown }).__offline = offlineState;
