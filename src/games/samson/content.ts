@@ -70,7 +70,7 @@ export const SCHAPTERS: SChapter[] = [
     intro: [
       { who: 'chefe', text: 'Ele está dentro de Gaza! Fechem as portas. De manhã cedo nós o matamos.', mood: 'stern' },
       { who: 'sansao', text: 'À meia-noite eu saio... e levo a porta comigo.', mood: 'happy' },
-      { who: 'narrator', text: 'Segure SUBIR para carregar os portões morro acima. Use ◀ e ▶ para não deixar tombar. Chegue antes do amanhecer!' },
+      { who: 'narrator', text: 'Segure SUBIR para carregar os portões morro acima. Use esquerda e direita para não deixar tombar. Chegue antes do amanhecer!' },
     ],
     outro: [
       { who: 'narrator', text: 'Ele arrancou as portas, as colunas e a tranca, e as levou até o alto do monte em frente a Hebrom.' },
@@ -97,7 +97,7 @@ export const SCHAPTERS: SChapter[] = [
     ref: 'Juízes 16:23-31',
     intro: [
       { who: 'chefe', text: 'Nosso deus Dagom entregou Sansão nas nossas mãos! Tragam-no aqui para nos divertir!', mood: 'happy' },
-      { who: 'menino', text: 'Vem, Sansão. Eu te levo pela mão.' },
+      { who: 'menino', text: 'Calma, Sansão. Eu te levo pela mão.' },
       { who: 'cego', text: 'Deixa-me tocar nas colunas que sustentam a casa, para eu me encostar nelas.' },
       { who: 'narrator', text: 'Primeiro, ore: toque quando a luz encostar no círculo. Depois empurre as colunas alternando ◀ e ▶ bem rápido!' },
     ],

@@ -62,7 +62,7 @@ export const CHAPTERS: Chapter[] = [
       { who: 'samuel', text: 'O Senhor me enviou à casa de Jessé. Um dos teus filhos será o rei de Israel.' },
       { who: 'jesse', text: 'Que honra, profeta! Meus filhos, venham todos!', mood: 'happy' },
       { who: 'voz', text: 'Não atentes para a aparência nem para a altura de Eliabe, porque o tenho rejeitado. Eu procuro um coração humilde, que confia em Deus e cuida dos fracos.' },
-      { who: 'narrator', text: 'Você é Samuel. Use ◀ ▶ para escolher um filho, OLHAR O CORAÇÃO para ver como ele é por dentro (os olhares são poucos!) e UNGIR só quando tiver certeza. Pense bem: quem falta?' },
+      { who: 'narrator', text: 'Você é Samuel. Use esquerda ou direita para escolher um filho, OLHAR O CORAÇÃO para ver como ele é por dentro (os olhares são poucos!) e UNGIR só quando tiver certeza. Pense bem: quem falta?' },
     ],
     outro: [
       { who: 'narrator', text: 'Samuel tomou o chifre do azeite e o ungiu no meio dos irmãos. E o Espírito do Senhor se apoderou de Davi.' },

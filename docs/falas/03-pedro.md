@@ -18,7 +18,7 @@ Falas agrupadas por personagem, em blocos de no máximo 500 caracteres (contando
 ```
 <warm storytelling> Segure DESCER para baixar o anzol e solte para parar. Fisgue o peixe que brilha!
 <warm storytelling> Jesus foi preso e levado à casa do sumo sacerdote. Pedro seguiu de longe e se sentou junto ao fogo no pátio.
-<warm storytelling> Segure ◀ ou ▶ para fugir da luz das lamparinas. Mas a noite está fria: longe do fogo o CALOR acaba e Pedro começa a tremer, chamando atenção. Escolha bem a hora de sair e voltar!
+<warm storytelling> Segure esquerda ou direita para fugir da luz das lamparinas. Mas a noite está fria: longe do fogo o CALOR acaba e Pedro começa a tremer, chamando atenção. Escolha bem a hora de sair e voltar!
 ```
 
 **Bloco 3** (442 caracteres)
@@ -129,7 +129,7 @@ Falas agrupadas por personagem, em blocos de no máximo 500 caracteres (contando
 
 ```
 <cheerful, crowd murmur, hesitant> Como os ouvimos falar cada um na nossa própria língua? Partos, medos, elamitas, egípcios, romanos...
-<crowd murmur> Que faremos, irmãos?
+<crowd murmur> O que faremos, irmãos?
 ```
 
 ## André (1 fala · 1 bloco)

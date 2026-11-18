@@ -15,7 +15,7 @@ Falas agrupadas por personagem, em blocos de no máximo 500 caracteres (contando
 **Bloco 2** (426 caracteres)
 
 ```
-<warm storytelling> Você é Samuel. Use ◀ ▶ para escolher um filho, OLHAR O CORAÇÃO para ver como ele é por dentro (os olhares são poucos!) e UNGIR só quando tiver certeza. Pense bem: quem falta?
+<warm storytelling> Você é Samuel. Use esquerda ou direita para escolher um filho, OLHAR O CORAÇÃO para ver como ele é por dentro (os olhares são poucos!) e UNGIR só quando tiver certeza. Pense bem: quem falta?
 <warm storytelling> Samuel tomou o chifre do azeite e o ungiu no meio dos irmãos. E o Espírito do Senhor se apoderou de Davi.
 <warm storytelling> Toque cada corda quando a nota chegar na linha dourada. Cada nota certa acalma o rei.
 ```

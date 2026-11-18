@@ -32,7 +32,7 @@ Falas agrupadas por personagem, em blocos de no máximo 500 caracteres (contando
 **Bloco 4** (488 caracteres)
 
 ```
-<warm storytelling> Segure SUBIR para carregar os portões morro acima. Use ◀ e ▶ para não deixar tombar. Chegue antes do amanhecer!
+<warm storytelling> Segure SUBIR para carregar os portões morro acima. Use esquerda e direita para não deixar tombar. Chegue antes do amanhecer!
 <warm storytelling> Ele arrancou as portas, as colunas e a tranca, e as levou até o alto do monte em frente a Hebrom.
 <warm storytelling> No vale de Soreque, Sansão se apaixonou por Dalila. Os chefes filisteus ofereceram muita prata a ela.
 <warm storytelling> Escolha as respostas. Quando gritarem "Os filisteus vêm sobre ti!", toque rápido para se soltar.
@@ -127,6 +127,6 @@ Falas agrupadas por personagem, em blocos de no máximo 500 caracteres (contando
 **Bloco 1** (40 caracteres)
 
 ```
-<calm> Vem, Sansão. Eu te levo pela mão.
+<calm> Calma, Sansão. Eu te levo pela mão.
 ```
 

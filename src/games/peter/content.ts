@@ -72,7 +72,7 @@ export const PCHAPTERS: SChapter[] = [
     intro: [
       { who: 'narrator', text: 'Jesus foi preso e levado à casa do sumo sacerdote. Pedro seguiu de longe e se sentou junto ao fogo no pátio.' },
       { who: 'pedro', text: 'Eu disse que iria com ele até a morte... Ninguém pode me reconhecer aqui.', mood: 'sad' },
-      { who: 'narrator', text: 'Segure ◀ ou ▶ para fugir da luz das lamparinas. Mas a noite está fria: longe do fogo o CALOR acaba e Pedro começa a tremer, chamando atenção. Escolha bem a hora de sair e voltar!' },
+      { who: 'narrator', text: 'Segure esquerda ou direita para fugir da luz das lamparinas. Mas a noite está fria: longe do fogo o CALOR acaba e Pedro começa a tremer, chamando atenção. Escolha bem a hora de sair e voltar!' },
     ],
     outro: [
       { who: 'narrator', text: 'Enquanto ele ainda falava, o galo cantou. O Senhor, voltando-se, olhou para Pedro.' },
@@ -107,7 +107,7 @@ export const PCHAPTERS: SChapter[] = [
       { who: 'narrator', text: 'Toque cada faixa quando a chama chegar na linha: cada povo ouve na sua própria língua!' },
     ],
     outro: [
-      { who: 'povo', text: 'Que faremos, irmãos?' },
+      { who: 'povo', text: 'O que faremos, irmãos?' },
       { who: 'pedro', text: 'Arrependei-vos, e cada um de vós seja batizado em nome de Jesus Cristo!', mood: 'happy' },
       { who: 'narrator', text: 'Naquele dia, quase três mil pessoas se juntaram a eles. O pescador de peixes virou pescador de homens. Fim da história de Pedro.' },
     ],
