@@ -1,114 +1,117 @@
-# O Carpinteiro — falas
+# O Carpinteiro — falas por personagem
 
 Direção de voz entre <> (em inglês), antes de cada fala. Vem do humor que a fala já tem no jogo, do personagem e do texto (sussurro, pergunta, oração...). Na Ester, 📖 marca as falas tiradas da Bíblia e 🎮 as instruções do jogo.
 
-## O Carpinteiro
+## José (15 falas)
 
-*Início*
+- `<calm>` Bom dia, filho! A vila tem encomendas para a nossa oficina.
+- `<calm>` Corte madeira nas árvores, faça as peças na bancada e entregue para quem pediu. Eu fico aqui ajudando.
+- `<excited>` Filho, a madeira boa está nas árvores ao noroeste. Machado nelas!
+- `<excited>` Na bancada, bata o martelo quando a marca passar na parte verde. Prego torto, cliente bravo!
+- `<calm>` Pedra se tira da pedreira, lá no nordeste.
+- `<calm>` Meça duas vezes e corte uma. Foi meu pai que me ensinou.
+- `<calm>` Árvore cortada brota de novo depois de uma noite. Deus é generoso.
+- `<excited>` Com as moedas, compre melhorias na bancada. Machado afiado poupa braço!
+- `<calm>` Ferramenta cega cansa o braço. A pedra de amolar fica ao lado da lenha.
+- `<excited>` Filho, tenho um desafio pra você hoje: “(nome do desafio)”. Topa? Paga em moedas e madeira!
+- `<calm>` Tudo bem. Estarei aqui na oficina quando quiser.
+- `<excited>` Tome: (moedas) moedas e 2 tábuas de sobra. Amanhã tem outro desafio!
+- `<calm>` Filho, chegaram encomendas novas! O povo já está vindo.
+- `<cheerful>` Filho, todas as encomendas da vila entregues! Já és mestre carpinteiro.
+- `<hesitant>` Mas sinto que um dia vais construir algo bem maior que mesas e portas...
 
-**José:** `<calm>` Bom dia, filho! A vila tem encomendas para a nossa oficina.  
-**José:** `<calm>` Corte madeira nas árvores, faça as peças na bancada e entregue para quem pediu. Eu fico aqui ajudando.  
-**Jesus:** `<gentle, warm>` Vamos ao trabalho, pai! Use as setas para andar e o A para agir.  
+## Jesus (13 falas)
 
-*Encomendas da vila (pedido e agradecimento)*
+- `<gentle, warm>` Vamos ao trabalho, pai! Use as setas para andar e o A para agir.
+- `<cheerful, gentle, warm>` Um dia vou contar uma história sobre um banquete assim.
+- `<cheerful, gentle, warm>` Pronto: um jugo suave, e o fardo fica leve.
+- `<cheerful, gentle, warm>` Olha os lírios do campo: nem Salomão, em toda a sua glória, se vestiu como um deles.
+- `<cheerful, gentle, warm>` Batei, e abrir-se-vos-á. Mas agora só se a senhora quiser abrir!
+- `<cheerful, gentle, warm, hesitant>` ...Tenho um carinho especial por manjedouras.
+- `<cheerful, gentle, warm>` Eu sou o pão da vida... mas o seu também é muito bom.
+- `<cheerful, gentle, warm>` Pescadores, sim... de um tipo diferente.
+- `<gentle, warm>` Dia (número). Bom dia, Nazaré!
+- `<gentle, warm>` Sem sementes... Mamãe às vezes tem. E na bancada dá pra comprar.
+- `<gentle, warm>` Já reguei. Agora é esperar: a semente cresce de noite, sem que se saiba como.
+- `<cheerful, gentle, warm>` Aprendi com o melhor, pai.
+- `<cheerful, gentle, warm>` Uma casa com muitas moradas. Mas isso fica pra depois. Amanhã tem mais madeira!
 
-_Cavalinho_  
-**Sara:** `<sad, childlike>` Tio Jesus, faz um cavalinho de madeira pra mim? Meu irmão tem um e não me empresta!  
-**Sara:** `<cheerful, childlike, excited>` É o cavalinho mais lindo do mundo! Vou chamar ele de Trovão!  
+## Maria (8 falas)
 
-_Banquinho_  
-**Dona Raquel:** `<calm>` Preciso de um banquinho pra ordenhar minha cabra. Ela é brava, viu? Tem que ser firme.  
-**Dona Raquel:** `<cheerful>` Que firmeza! Nem a cabra vai conseguir me derrubar agora.  
+- `<calm>` Filho, não se esqueça de regar a horta. Os lírios gostam de água fresca.
+- `<calm>` Quando cansar, venha dormir. É só bater na porta de casa.
+- `<excited>` Seu pai diz que você já trabalha melhor que ele. Mas não conta pra ele que eu disse!
+- `<curious>` Guardo todas essas coisas no meu coração, sabia?
+- `<calm>` Os lírios floresceram! Vá colher.
+- `<excited>` Filho, a vizinha mandou sementes de lírio. Tome, duas pra você!
+- `<calm>` Já vai dormir, filho? O sol ainda está alto! Volte depois das três da tarde.
+- `<calm>` Filho, já escureceu! Hora de descansar.
 
-_Mesa_  
-**Natanael:** `<curious>` Vou receber a família inteira no sábado. Preciso de uma mesa grande! Cabe todo mundo?  
-**Natanael:** `<cheerful>` Agora pode vir quem quiser, tem lugar pra todos!  
-**Jesus:** `<cheerful, gentle, warm>` Um dia vou contar uma história sobre um banquete assim.  
+## Morador (figurante) (4 falas)
 
-_Jugo de bois_  
-**Tiago, o lavrador:** `<sad>` Meu jugo velho machuca o pescoço dos bois. Faz um novo, bem lixadinho?  
-**Jesus:** `<cheerful, gentle, warm>` Pronto: um jugo suave, e o fardo fica leve.  
-**Tiago, o lavrador:** `<cheerful>` Os bois até sorriram! Nunca vi boi sorrir.  
+- `<friendly>` Shalom, Jesus!
+- `<friendly>` Bom dia, carpinteiro!
+- `<friendly>` Shalom!
+- `<friendly>` A paz!
 
-_Lírios_  
-**Miriam:** `<cheerful>` Vou me casar em Caná! Queria três lírios do campo para enfeitar a festa. Sua horta tem?  
-**Jesus:** `<cheerful, gentle, warm>` Olha os lírios do campo: nem Salomão, em toda a sua glória, se vestiu como um deles.  
-**Miriam:** `<cheerful>` Você vai à festa, né? Dizem que o vinho vai ser ótimo!  
+## Jesus (acerto) (3 falas)
 
-_Cadeira_  
-**Rabi Eli:** `<calm>` Uma cadeira para a sinagoga, para quem lê as Escrituras. Faça com capricho, rapaz.  
-**Rabi Eli:** `<cheerful>` Muito bem feita. Tens mãos de artesão... e às vezes falas como um mestre.  
+- `<satisfied>` Bem pregado!
+- `<satisfied>` Certeiro!
+- `<satisfied>` Isso!
 
-_Porta_  
-**Débora:** `<sad>` O vento leva a minha porta toda noite. Uma viúva precisa de uma porta que fecha!  
-**Débora:** `<cheerful>` Que porta firme! Deus te abençoe, filho.  
-**Jesus:** `<cheerful, gentle, warm>` Batei, e abrir-se-vos-á. Mas agora só se a senhora quiser abrir!  
+## Jesus (erro) (3 falas)
 
-_Manjedoura_  
-**Ana, da hospedaria:** `<curious>` A estrebaria da hospedaria precisa de uma manjedoura nova. Nunca se sabe quem vai nascer lá, né?  
-**Ana, da hospedaria:** `<cheerful>` Perfeita! Os animais vão comer como reis.  
-**Jesus:** `<cheerful, gentle, warm, hesitant>` ...Tenho um carinho especial por manjedouras.  
+- `<wincing>` Ai, o dedo!
+- `<wincing, hesitant>` Prego torto...
+- `<wincing>` Quase!
 
-_Mó de moinho_  
-**Simeão, o moleiro:** `<sad>` A pedra do meu moinho rachou! Sem farinha não tem pão, e sem pão a vila fica brava.  
-**Simeão, o moleiro:** `<cheerful, excited>` Agora sim! Pão pra vila toda!  
-**Jesus:** `<cheerful, gentle, warm>` Eu sou o pão da vida... mas o seu também é muito bom.  
+## Ana, da hospedaria (2 falas)
 
-_Barquinho_  
-**Zebedeu:** `<curious>` Meus filhos Tiago e João querem um barquinho pra aprender a pescar no lago. Dá pra fazer?  
-**Zebedeu:** `<cheerful>` Eles vão amar! Um dia ainda vão ser grandes pescadores.  
-**Jesus:** `<cheerful, gentle, warm>` Pescadores, sim... de um tipo diferente.  
+- `<curious>` A estrebaria da hospedaria precisa de uma manjedoura nova. Nunca se sabe quem vai nascer lá, né?
+- `<cheerful>` Perfeita! Os animais vão comer como reis.
 
-*José, na oficina*
+## Dona Raquel (2 falas)
 
-**José:** `<excited>` Filho, a madeira boa está nas árvores ao noroeste. Machado nelas!  
-**José:** `<excited>` Na bancada, bata o martelo quando a marca passar na parte verde. Prego torto, cliente bravo!  
-**José:** `<calm>` Pedra se tira da pedreira, lá no nordeste.  
-**José:** `<calm>` Meça duas vezes e corte uma. Foi meu pai que me ensinou.  
-**José:** `<calm>` Árvore cortada brota de novo depois de uma noite. Deus é generoso.  
-**José:** `<excited>` Com as moedas, compre melhorias na bancada. Machado afiado poupa braço!  
-**José:** `<calm>` Ferramenta cega cansa o braço. A pedra de amolar fica ao lado da lenha.  
-**José:** `<excited>` Filho, tenho um desafio pra você hoje: “(nome do desafio)”. Topa? Paga em moedas e madeira!  
-**José:** `<calm>` Tudo bem. Estarei aqui na oficina quando quiser.  
-**José:** `<excited>` Tome: (moedas) moedas e 2 tábuas de sobra. Amanhã tem outro desafio!  
-**José:** `<calm>` Filho, chegaram encomendas novas! O povo já está vindo.  
+- `<calm>` Preciso de um banquinho pra ordenhar minha cabra. Ela é brava, viu? Tem que ser firme.
+- `<cheerful>` Que firmeza! Nem a cabra vai conseguir me derrubar agora.
 
-*Maria, em casa*
+## Débora (2 falas)
 
-**Maria:** `<calm>` Filho, não se esqueça de regar a horta. Os lírios gostam de água fresca.  
-**Maria:** `<calm>` Quando cansar, venha dormir. É só bater na porta de casa.  
-**Maria:** `<excited>` Seu pai diz que você já trabalha melhor que ele. Mas não conta pra ele que eu disse!  
-**Maria:** `<curious>` Guardo todas essas coisas no meu coração, sabia?  
-**Maria:** `<calm>` Os lírios floresceram! Vá colher.  
-**Maria:** `<excited>` Filho, a vizinha mandou sementes de lírio. Tome, duas pra você!  
-**Maria:** `<calm>` Já vai dormir, filho? O sol ainda está alto! Volte depois das três da tarde.  
-**Maria:** `<calm>` Filho, já escureceu! Hora de descansar.  
+- `<sad>` O vento leva a minha porta toda noite. Uma viúva precisa de uma porta que fecha!
+- `<cheerful>` Que porta firme! Deus te abençoe, filho.
 
-*Jesus*
+## Miriam (2 falas)
 
-**Jesus:** `<gentle, warm>` Dia (número). Bom dia, Nazaré!  
-**Jesus:** `<gentle, warm>` Sem sementes... Mamãe às vezes tem. E na bancada dá pra comprar.  
-**Jesus:** `<gentle, warm>` Já reguei. Agora é esperar: a semente cresce de noite, sem que se saiba como.  
+- `<cheerful>` Vou me casar em Caná! Queria três lírios do campo para enfeitar a festa. Sua horta tem?
+- `<cheerful>` Você vai à festa, né? Dizem que o vinho vai ser ótimo!
 
-*Quem passa pela rua (figurantes)*
+## Natanael (2 falas)
 
-**Morador (figurante):** `<friendly>` Shalom, Jesus!  
-**Morador (figurante):** `<friendly>` Bom dia, carpinteiro!  
-**Morador (figurante):** `<friendly>` Shalom!  
-**Morador (figurante):** `<friendly>` A paz!  
+- `<curious>` Vou receber a família inteira no sábado. Preciso de uma mesa grande! Cabe todo mundo?
+- `<cheerful>` Agora pode vir quem quiser, tem lugar pra todos!
 
-*Na bancada, ao martelar*
+## Rabi Eli (2 falas)
 
-**Jesus (acerto):** `<satisfied>` Bem pregado!  
-**Jesus (acerto):** `<satisfied>` Certeiro!  
-**Jesus (acerto):** `<satisfied>` Isso!  
-**Jesus (erro):** `<wincing>` Ai, o dedo!  
-**Jesus (erro):** `<wincing, hesitant>` Prego torto...  
-**Jesus (erro):** `<wincing>` Quase!  
+- `<calm>` Uma cadeira para a sinagoga, para quem lê as Escrituras. Faça com capricho, rapaz.
+- `<cheerful>` Muito bem feita. Tens mãos de artesão... e às vezes falas como um mestre.
 
-*Final*
+## Sara (2 falas)
 
-**José:** `<cheerful>` Filho, todas as encomendas da vila entregues! Já és mestre carpinteiro.  
-**Jesus:** `<cheerful, gentle, warm>` Aprendi com o melhor, pai.  
-**José:** `<hesitant>` Mas sinto que um dia vais construir algo bem maior que mesas e portas...  
-**Jesus:** `<cheerful, gentle, warm>` Uma casa com muitas moradas. Mas isso fica pra depois. Amanhã tem mais madeira!  
+- `<sad, childlike>` Tio Jesus, faz um cavalinho de madeira pra mim? Meu irmão tem um e não me empresta!
+- `<cheerful, childlike, excited>` É o cavalinho mais lindo do mundo! Vou chamar ele de Trovão!
+
+## Simeão, o moleiro (2 falas)
+
+- `<sad>` A pedra do meu moinho rachou! Sem farinha não tem pão, e sem pão a vila fica brava.
+- `<cheerful, excited>` Agora sim! Pão pra vila toda!
+
+## Tiago, o lavrador (2 falas)
+
+- `<sad>` Meu jugo velho machuca o pescoço dos bois. Faz um novo, bem lixadinho?
+- `<cheerful>` Os bois até sorriram! Nunca vi boi sorrir.
+
+## Zebedeu (2 falas)
+
+- `<curious>` Meus filhos Tiago e João querem um barquinho pra aprender a pescar no lago. Dá pra fazer?
+- `<cheerful>` Eles vão amar! Um dia ainda vão ser grandes pescadores.
