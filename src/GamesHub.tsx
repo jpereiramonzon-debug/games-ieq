@@ -17,6 +17,7 @@ import Life from './games/life/Life';
 import { heroCard } from './games/pixel/heroes';
 import { useT } from './i18n';
 import { useStore } from './store';
+import { cx } from './ui/kit';
 
 export type GameId = 'esther' | 'joseph' | 'life' | 'peter' | 'noah' | 'samson' | 'david' | 'run' | 'quest' | 'carpenter';
 
@@ -144,6 +145,8 @@ export default function GamesHub({ game, setGame }: { game: GameId | null; setGa
       </div>
     );
 
+  // Stories still in development: visible, but not playable yet.
+  const WIP = new Set<GameId>(['peter', 'noah', 'esther']);
   const heroes = [
     { id: 'jesus' as const, name: 'Jesus', img: heroCard('jesus'), done: vida.length as number | null, total: 11 },
     { id: 'david' as const, name: 'Davi', img: heroCard('davi'), done: davi.length, total: 6 },
@@ -160,13 +163,32 @@ export default function GamesHub({ game, setGame }: { game: GameId | null; setGa
         {heroes.map((h) => (
           <button
             key={h.id}
-            onClick={() => (h.id === 'jesus' ? setHero('jesus') : setGame(h.id))}
-            className="group relative overflow-hidden rounded-2xl border-[3px] border-[#5b3a1e] bg-[#2a1a10] text-left transition active:scale-95"
+            onClick={() => (WIP.has(h.id as GameId) ? undefined : h.id === 'jesus' ? setHero('jesus') : setGame(h.id))}
+            aria-disabled={WIP.has(h.id as GameId)}
+            aria-label={WIP.has(h.id as GameId) ? `${h.name}: em desenvolvimento` : h.name}
+            className={cx(
+              'group relative overflow-hidden rounded-2xl border-[3px] border-[#5b3a1e] bg-[#2a1a10] text-left transition',
+              WIP.has(h.id as GameId) ? 'cursor-not-allowed' : 'active:scale-95',
+            )}
           >
-            <img src={h.img} alt="" className="block aspect-[3/4] w-full object-cover transition group-hover:scale-105" loading="lazy" />
+            <img
+              src={h.img}
+              alt=""
+              className={cx('block aspect-[3/4] w-full object-cover transition', WIP.has(h.id as GameId) ? 'opacity-60 grayscale' : 'group-hover:scale-105')}
+              loading="lazy"
+            />
+            {WIP.has(h.id as GameId) && (
+              <span className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-black/45">
+                <span className="h-9 w-9 animate-spin rounded-full border-4 border-[#e8b830] border-t-transparent" aria-hidden />
+                <span className="font-pixel rounded-sm bg-[#2a1a10]/90 px-2 py-0.5 text-center text-sm leading-tight text-[#ffe08a]">
+                  Em desenvolvimento
+                  <span className="block text-xs text-white/80">em breve</span>
+                </span>
+              </span>
+            )}
             <span className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-1 bg-gradient-to-t from-black/85 via-black/50 to-transparent px-2.5 pb-2 pt-8">
               <span className="font-pixel text-2xl text-white drop-shadow-[2px_2px_0_#000]">{h.name}</span>
-              {h.done !== null && (
+              {h.done !== null && !WIP.has(h.id as GameId) && (
                 <span className="flex items-center gap-1 text-xs tabular-nums text-white/80">
                   <Trophy size={13} /> {h.done}/{h.total}
                 </span>
