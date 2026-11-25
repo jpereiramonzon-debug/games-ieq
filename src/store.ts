@@ -22,6 +22,8 @@ export interface State {
   questDone: string[];
   carpenter: object | null;
   davidDone: string[];
+  /** Two-player chapters of David finished together. */
+  davidDuoDone: string[];
   samsonDone: string[];
   peterDone: string[];
   noahDone: string[];
@@ -50,6 +52,7 @@ const defaults: State = {
   questDone: [],
   carpenter: null,
   davidDone: [],
+  davidDuoDone: [],
   samsonDone: [],
   peterDone: [],
   noahDone: [],

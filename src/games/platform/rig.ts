@@ -44,7 +44,7 @@ export interface CharSpec {
   glow?: string;
   /** Bandage over the eyes (the blind man). */
   bandage?: 'eyes' | 'arms';
-  props?: ('sling' | 'bag' | 'keys' | 'chains' | 'staff' | 'spear' | 'shield' | 'harp' | 'collar' | 'bracers' | 'scepter' | 'earrings' | 'scroll')[];
+  props?: ('sling' | 'bag' | 'keys' | 'chains' | 'staff' | 'spear' | 'shield' | 'harp' | 'collar' | 'bracers' | 'scepter' | 'earrings' | 'scroll' | 'bow')[];
   cape?: string;
 }
 
@@ -121,6 +121,21 @@ export const CAST = {
   mulher: { skin: '#e0a070', hair: '#3a2010', hairStyle: 'long', tunic: '#a84a3a', sleeve: 'long', belt: '#e8d0a0', robe: true, head: 'veil', headColor: '#d8c8a0' },
   anciao: { skin: '#d8a070', hair: '#e0dcd0', hairStyle: 'short', beard: 'long', tunic: '#6a7a5a', sleeve: 'long', belt: '#4a3a28', robe: true, props: ['staff'] },
   menino: { skin: '#eaa978', hair: '#3a2416', hairStyle: 'short', tunic: '#9a7a4a', sleeve: 'short', belt: '#5e4428', build: 'slim' },
+  // Jonathan, son of Saul and David's friend (1 Samuel 18-20).
+  jonatas: {
+    skin: '#e2a272',
+    hair: '#3a2214',
+    hairStyle: 'wavy',
+    beard: 'short',
+    tunic: '#2e6ab0',
+    sleeve: 'short',
+    belt: '#e0b030',
+    coat: ['#7a2a3a'],
+    sash: '#e0b030',
+    head: 'crown',
+    headColor: '#d8a830',
+    props: ['bow'],
+  },
   // Book of Esther.
   ester: { skin: '#e2a272', hair: '#24140e', hairStyle: 'flow', fem: true, tunic: '#5a6ab8', sleeve: 'long', belt: '#e0b030', robe: true, sash: '#e8d8b0', build: 'slim', props: ['earrings'] },
   esterRainha: {
@@ -343,7 +358,7 @@ export interface Pose {
   expr?: Expr;
   /** Kneeling: back knee on the ground. */
   kneel?: boolean;
-  fxk?: 'sling-spin' | 'sling-release' | 'pillar' | 'keys-glow' | 'dream' | 'bless' | 'hammer' | 'punch' | 'stars' | 'item' | 'sweat' | 'thrust' | 'scepter' | 'read' | 'think' | 'talk' | 'shock' | 'tear' | 'resolve';
+  fxk?: 'sling-spin' | 'sling-release' | 'pillar' | 'keys-glow' | 'dream' | 'bless' | 'hammer' | 'punch' | 'stars' | 'item' | 'sweat' | 'thrust' | 'scepter' | 'read' | 'think' | 'talk' | 'shock' | 'tear' | 'resolve' | 'arrow';
   t?: number;
 }
 const L = (a: number, b = 0): Limb => ({ a, b });
@@ -849,6 +864,18 @@ export function renderPose(spec: CharSpec, p: Pose): ImageData {
         .line(ex + 5, ey - 6, ex + 3, ey);
       f.paint(hp, '#e8b830', { shade: 0, contour: true });
     }
+    if (props.includes('bow')) {
+      const draw = p.fxk === 'arrow';
+      const bx = draw ? ex + 3 : armB.ex - 1;
+      const by = draw ? ey : armB.ey - 4;
+      const bow = new Mask().line(bx, by - 7, bx + 3, by - 3).line(bx + 3, by - 3, bx + 3, by + 3).line(bx + 3, by + 3, bx, by + 7);
+      f.paint(bow, '#8a5a2a', { shade: 0, contour: true });
+      f.paint(new Mask().line(bx, by - 7, draw ? bx - 4 : bx, by).line(draw ? bx - 4 : bx, by, bx, by + 7), '#e8e0c8', { shade: 0 });
+      if (draw) {
+        f.paint(new Mask().line(bx - 4, by, bx + 8 + (t > 0.5 ? 6 : 0), by), '#6a4424', { shade: 0 });
+        f.dot(bx + 9 + (t > 0.5 ? 6 : 0), by, '#d8d8e0');
+      }
+    }
     if (props.includes('scepter')) {
       const up = p.fxk === 'scepter';
       const x1 = up ? ex + 10 : ex + 1;
@@ -1033,7 +1060,8 @@ export const ANIMS: Record<Anim, { frames: number; fps: number; loop: boolean }>
 };
 
 /** The special move of each hero (and the attack, when they have one). */
-const SPECIAL: Partial<Record<CastId, 'sling' | 'pillar' | 'keys' | 'dream' | 'bless' | 'hammer' | 'thrust' | 'harp' | 'scepter'>> = {
+const SPECIAL: Partial<Record<CastId, 'sling' | 'pillar' | 'keys' | 'dream' | 'bless' | 'hammer' | 'thrust' | 'harp' | 'scepter' | 'bow'>> = {
+  jonatas: 'bow',
   davi: 'sling',
   daviRei: 'harp',
   sansao: 'pillar',
@@ -1167,6 +1195,8 @@ export function poseFor(id: CastId, anim: Anim, i: number): Pose {
           { lean: 3, armF: L(1.6, 0), armB: L(-0.6, 0.6), legF: L(0.5, 0.2), legB: L(-0.7), expr: 'focus' as Expr },
           { lean: 1, armF: L(0.6, 0.8), armB: L(0, 0.4), legF: L(0.2), legB: L(-0.2), expr: 'neutral' as Expr },
         ][i];
+      if (k === 'bow')
+        return [0.1, 0.4, 0.8, 1].map((tt) => ({ lean: -1, armF: L(1.5, 0.05), armB: L(1.45, 1.4 - tt), legF: L(0.4), legB: L(-0.35), expr: 'focus' as Expr, fxk: 'arrow' as const, t: tt }))[i];
       if (k === 'thrust')
         return [
           { lean: -1, armF: L(1.2, 0.6), legF: L(0.3), legB: L(-0.3), expr: 'focus' as Expr, fxk: 'thrust' as const },
@@ -1188,6 +1218,7 @@ export function poseFor(id: CastId, anim: Anim, i: number): Pose {
       if (k === 'dream') return { by: i % 3 === 0 ? 0 : 1, armF: L(2.4, 2.0), armB: L(2.2, 2.0), legF: L(0.1), legB: L(-0.1), expr: 'closed', fxk: 'dream', t };
       if (k === 'bless') return { by: i % 3 === 0 ? 0 : 1, armF: L(2.0, -0.1), armB: L(1.7, -0.1), legF: L(0.1), legB: L(-0.1), expr: 'happy', fxk: 'bless', t };
       if (k === 'harp') return { by: i % 2, armF: L(1.1, 1.2), armB: L(0.9, 1.4 + (i % 2) * 0.3), legF: L(0.1), legB: L(-0.1), expr: i % 3 ? 'closed' : 'happy' };
+      if (k === 'bow') return { lean: -1, armF: L(1.5, 0.05), armB: L(1.45, 1.4 - t), legF: L(0.4), legB: L(-0.35), expr: 'focus', fxk: 'arrow', t };
       if (k === 'scepter') return { by: i % 2, lean: 1, armF: L(1.5 - (i < 2 ? (1 - i) * 0.6 : 0), 0.05), armB: L(-0.1, 0.3), legF: L(0.15), legB: L(-0.1), expr: i > 1 ? 'happy' : 'neutral', fxk: 'scepter', t };
       if (k === 'hammer') return { lean: 1, armF: i < 3 ? L(2.6 - i * 0.2, 0.6) : L(1.2, 0.4), armB: L(0.5, 0.4), legF: L(0.3), legB: L(-0.3), expr: 'focus', fxk: 'hammer' };
       return poseFor(id, 'attack', Math.min(3, i));

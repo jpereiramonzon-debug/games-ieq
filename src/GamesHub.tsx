@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ArrowLeft, Trophy } from 'lucide-react';
 import JesusRun from './games/run/JesusRun';
 import { RunBanner } from './games/run/Banner';
@@ -21,6 +21,11 @@ import { useStore } from './store';
 export type GameId = 'esther' | 'joseph' | 'life' | 'peter' | 'noah' | 'samson' | 'david' | 'run' | 'quest' | 'carpenter';
 
 export default function GamesHub({ game, setGame }: { game: GameId | null; setGame: (g: GameId | null) => void }) {
+  // An invite to the two-player mode goes straight to David.
+  useEffect(() => {
+    if (new URLSearchParams(location.search).get('sala')) setGame('david');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const t = useT();
   const best = useStore((s) => s.best);
   const questDone = useStore((s) => s.questDone);

@@ -30,7 +30,7 @@ const CLIMB = 70;
 const HW = 6;
 const HH = 32;
 
-interface Theme {
+export interface Theme {
   block: string;
   mortar: string;
   band: string[] | null;
@@ -38,7 +38,7 @@ interface Theme {
   plat: string;
   grass?: string;
 }
-const THEMES: Record<ThemeId, Theme> = {
+export const THEMES: Record<ThemeId, Theme> = {
   egypt: { block: '#d8a84a', mortar: '#a8782a', band: ['#2a5aa8', '#3a9a6a', '#c8503a', '#f0d080'], wall: '#8a6424', plat: '#e8c060' },
   palace: { block: '#9a8aa6', mortar: '#5a4e66', band: ['#e8d8b0', '#c8b088', '#6a5a7a', '#f4e8c8'], wall: '#3a2e4c', plat: '#d8a868' },
   desert: { block: '#c8a070', mortar: '#9a7848', band: null, wall: null, plat: '#a87a44' },
@@ -55,7 +55,7 @@ const THEMES: Record<ThemeId, Theme> = {
 
 // ------------------------------------------------------------------ tiles
 
-function paintTiles(rows: string[], th: Theme) {
+export function paintTiles(rows: string[], th: Theme) {
   const H = rows.length;
   const W = rows[0].length;
   const c = document.createElement('canvas');

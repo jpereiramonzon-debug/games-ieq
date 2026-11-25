@@ -12,6 +12,10 @@ Histórias da Bíblia em jogos de pixel art 16-bit, para jogar no celular (deita
   de Hatá, conversas com escolhas, tarefas dos três dias, padrões, o corredor do trono, a mesa do banquete,
   as crônicas do rei, o pedido de Ester, quem fez o quê, os mensageiros do rei e as diferenças da festa de Purim.
   As falas tiradas da Bíblia mostram a referência (📖); as instruções dos desafios aparecem como 🎮.
+- **Modo Dupla online (Davi e Jônatas):** dois celulares jogam juntos 4 capítulos (1 Samuel 18-23): fase de
+  plataforma em dupla (placas, ombros do parceiro, chaves da equipe), defesa contra os filisteus, os sinais das
+  flechas e o encontro em Horesa. Quem cria a sala é Davi; quem entra pelo código ou pelo link de convite é Jônatas.
+  Conexão direta entre os aparelhos (WebRTC/PeerJS). Detalhes em `docs/multiplayer.md`.
 - Em todas as histórias: histórico de diálogos, botão de objetivo, diário com conquistas e recordações.
 - **Mais aventuras de Jesus:** Missões de Jesus, O Carpinteiro e Corrida da Fé.
 

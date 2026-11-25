@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type ComponentType } from 'react';
+import { useEffect, useMemo, useRef, useState, type ComponentType, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { BookOpen, Check, Lock, Music, RotateCw, ScrollText, Target, VolumeX, X } from 'lucide-react';
 import { engine } from '../../audio/engine';
@@ -67,7 +67,7 @@ export interface Saga {
   note?: string;
 }
 
-export function StoryMenu({ saga, onBack }: { saga: Saga; onBack: () => void }) {
+export function StoryMenu({ saga, onBack, extra }: { saga: Saga; onBack: () => void; extra?: ReactNode }) {
   const CHAPTERS = saga.chapters;
   const done = useStore((s) => s[saga.key]);
   const stars = useStore((s) => s.stars);
@@ -100,6 +100,7 @@ export function StoryMenu({ saga, onBack }: { saga: Saga; onBack: () => void }) 
         )}
         <div className="rpg-frame rpg-text flex-1 p-3 text-lg leading-snug">{saga.blurb}</div>
       </div>
+      {extra}
       {saga.note && <p className="rpg-frame rpg-text px-3 py-1.5 text-sm leading-snug">📖 {saga.note}</p>}
       <DiffPicker />
       {(saga.items || saga.achievements) && <Journal saga={saga} done={done} stars={(id) => stars[`${saga.key}:${id}`] ?? 0} />}
@@ -230,7 +231,7 @@ function History({ log, speakers, onClose }: { log: SLine[]; speakers: Saga['spe
   );
 }
 
-function Talk({ lines, speakers, onDone, onLine, log }: { lines: SLine[]; speakers: Saga['speakers']; onDone: () => void; onLine?: (l: SLine) => void; log?: SLine[] }) {
+export function Talk({ lines, speakers, onDone, onLine, log }: { lines: SLine[]; speakers: Saga['speakers']; onDone: () => void; onLine?: (l: SLine) => void; log?: SLine[] }) {
   const [i, setI] = useState(0);
   const [hist, setHist] = useState(false);
   useEffect(() => {
