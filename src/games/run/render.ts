@@ -4,16 +4,7 @@
  */
 import { drawPerson, LOOKS, shade } from '../pixel/person';
 import { drawChar } from '../platform/rig';
-import { drawBackdrop } from '../platform/sky';
-import type { ThemeId, TimeOfDay } from '../platform/level';
-
-const SCENE: Record<string, [ThemeId, TimeOfDay]> = {
-  desert: ['desert', 'day'],
-  sea: ['shore', 'dawn'],
-  olives: ['village', 'sunset'],
-  jerusalem: ['night', 'night'],
-  endless: ['desert', 'sunset'],
-};
+import { drawGround, drawScene, ENDLESS_ORDER, ENDLESS_SPAN, type SceneId } from './scenes';
 import { GROUND, H, type Ent, type World } from './levels';
 import * as SP from './sprites';
 
@@ -67,6 +58,8 @@ const THEMES: Record<string, Theme> = {
   sea: { sky: ['#86c6e6', '#a2d4ec', '#bfe2f0', '#d8eef4'], far: '#8aa874', farD: '#6c8a5a', ground: '#3c7cb2', groundD: '#2c5e8e', groundL: '#e8f4f8', dim: 0 },
   olives: { sky: ['#94cee4', '#addaeb', '#c6e6ef', '#dceff2'], far: '#86a466', farD: '#66844c', ground: '#b4a868', groundD: '#8e8448', groundL: '#ccc282', dim: 0 },
   jerusalem: { sky: ['#141a36', '#1c2446', '#26305a', '#323e6e'], far: '#3a3a5c', farD: '#2a2a46', ground: '#6a6272', groundD: '#4c4656', groundL: '#847c8c', dim: 0.32 },
+  nazare: { sky: [], far: '', farD: '', ground: '#c8a874', groundD: '#a88a5a', groundL: '#e0c898', dim: 0 },
+  cafarnaum: { sky: [], far: '', farD: '', ground: '#5a5a60', groundD: '#3e3e44', groundL: '#8a8a92', dim: 0 },
 };
 const themeOf = (w: World) => THEMES[w.id] ?? THEMES.desert;
 
@@ -121,41 +114,45 @@ export function renderRun(ctx: CanvasRenderingContext2D, v: View) {
   const th = themeOf(v.world);
   const W = v.viewW;
   const cam = v.cam;
-  // Sky and parallax scenery shared with the story stages (platform/sky).
-  const [theme, time] = SCENE[v.world.id] ?? SCENE.desert;
-  drawBackdrop(ctx, W, GROUND + 8, theme, time, v.time, cam);
-  // Ground, with gaps for pits.
+  // Scenery of the place (several parallax layers) and its ground.
   const pits = v.ents.filter((e) => e.kind === 'pit' && e.x < cam + W && e.x + e.w > cam);
-  const inPit = (wx: number) => pits.some((e) => wx > e.x && wx < e.x + e.w);
-  for (let x = 0; x < W; x++) {
-    const wx = Math.floor(x + cam);
-    if (inPit(wx)) {
-      ctx.fillStyle = shade(th.groundD, -0.45);
-      ctx.fillRect(x, GROUND, 1, H - GROUND);
-      continue;
+  if (v.world.length === 0) {
+    // Endless: the places follow one another, crossfading at each change.
+    const n = ENDLESS_ORDER.length;
+    const seg = Math.floor(cam / ENDLESS_SPAN);
+    const a = ENDLESS_ORDER[((seg % n) + n) % n];
+    const b = ENDLESS_ORDER[(((seg + 1) % n) + n) % n];
+    const into = cam - seg * ENDLESS_SPAN;
+    const fade = Math.max(0, Math.min(1, (into - (ENDLESS_SPAN - 300)) / 300));
+    drawScene(ctx, a, W, cam, v.time);
+    if (fade > 0) drawScene(ctx, b, W, cam, v.time, fade);
+    const edge = (seg + 1) * ENDLESS_SPAN - cam;
+    drawGround(ctx, a, W, cam, v.time);
+    if (edge < W) {
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(edge, GROUND - 2, W - edge, H - GROUND + 2);
+      ctx.clip();
+      drawGround(ctx, b, W, cam, v.time);
+      ctx.restore();
     }
-    if (v.world.id === 'sea') {
-      ctx.fillStyle = th.ground;
-      ctx.fillRect(x, GROUND, 1, H - GROUND);
-      const wave = Math.sin(wx / 7 + v.time * 3);
-      ctx.fillStyle = th.groundL;
-      if (wave > 0.55) ctx.fillRect(x, GROUND, 1, 1);
-      ctx.fillStyle = th.groundD;
-      if (Math.sin(wx / 5 + v.time * 2 + 1) > 0.7) ctx.fillRect(x, GROUND + 6 + (wx % 3), 1, 1);
-      continue;
-    }
-    ctx.fillStyle = th.groundL;
-    ctx.fillRect(x, GROUND, 1, 2);
-    ctx.fillStyle = th.ground;
-    ctx.fillRect(x, GROUND + 2, 1, H - GROUND);
-    const h = (wx * 2654435761) >>> 0;
-    ctx.fillStyle = th.groundD;
-    if (h % 7 === 0) ctx.fillRect(x, GROUND + 4 + (h % 9), 1 + (h % 2), 1);
-    if (h % 11 === 0) ctx.fillRect(x, GROUND + 3 + (h % 13), 1, 1);
-    if (v.world.id === 'olives' && h % 9 === 0) {
-      ctx.fillStyle = '#6a8a3a';
-      ctx.fillRect(x, GROUND - 1, 1, 2);
-    }
+  } else {
+    const id = v.world.id as SceneId;
+    drawScene(ctx, id, W, cam, v.time);
+    drawGround(ctx, id, W, cam, v.time);
+  }
+  // Pits: a dark gap with crumbling edges.
+  for (const e of pits) {
+    const x0 = Math.max(0, Math.round(e.x - cam));
+    const x1 = Math.min(W, Math.round(e.x + e.w - cam));
+    if (x1 <= x0) continue;
+    const g = ctx.createLinearGradient(0, GROUND, 0, H);
+    g.addColorStop(0, shade(th.groundD, -0.5));
+    g.addColorStop(1, '#0a0806');
+    ctx.fillStyle = g;
+    ctx.fillRect(x0, GROUND, x1 - x0, H - GROUND);
+    ctx.fillStyle = shade(th.groundD, -0.2);
+    for (const ex of [Math.round(e.x - cam), Math.round(e.x + e.w - cam) - 2]) if (ex >= 0 && ex < W) ctx.fillRect(ex, GROUND, 2, 6);
   }
   // Things.
   const dim = th.dim;

@@ -94,7 +94,7 @@ export default function JesusRun({ onBack }: { onBack: () => void }) {
   const stars = useStore((s) => s.runStars);
   const best = useStore((s) => s.best.jesusRun ?? 0);
   const [world, setWorld] = useState<World | null>(null);
-  const unlocked = (w: World) => w.length === 0 || w.number === 1 || (stars[WORLDS[w.number - 2].id] ?? 0) > 0;
+  const unlocked = (w: World) => w.length === 0 || w.number === 1 || (stars[WORLDS[w.number - 2].id] ?? 0) > 0 || (stars[w.id] ?? 0) > 0;
 
   if (world) return <Level world={world} onExit={() => setWorld(null)} />;
 
@@ -103,7 +103,7 @@ export default function JesusRun({ onBack }: { onBack: () => void }) {
       <p className="font-pixel text-lg text-muted">{t('run.intro')}</p>
       <div className="rpg-frame rpg-text relative p-3">
         <p className="mb-2 text-center text-xl text-[#ffe08a]">{t('run.map')}</p>
-        <ol className="relative grid gap-2 sm:grid-cols-5">
+        <ol className="relative grid gap-2 sm:grid-cols-4 lg:grid-cols-7">
           {WORLDS.map((w, i) => {
             const open = unlocked(w);
             const got = stars[w.id] ?? 0;
@@ -574,7 +574,7 @@ function Level({ world, onExit }: { world: World; onExit: () => void }) {
           </button>
         )}
       </header>
-      <div className="px-2 landscape:pointer-events-none landscape:absolute landscape:left-[max(0.5rem,env(safe-area-inset-left))] landscape:top-14 landscape:z-20 landscape:max-w-[55%] landscape:origin-top-left landscape:scale-90 landscape:px-0">
+      <div className="px-2 landscape:pointer-events-none landscape:absolute landscape:left-[32%] landscape:top-14 landscape:z-20 landscape:max-w-[45%] landscape:origin-top-left landscape:scale-90 landscape:px-0">
         {coach.node}
       </div>
       <div className="px-2 pt-2 landscape:hidden">{hudChip}</div>
