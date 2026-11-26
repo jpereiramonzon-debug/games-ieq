@@ -4,12 +4,12 @@ Falas agrupadas por personagem, em blocos de no máximo 500 caracteres (contando
 
 ## Narrador (28 falas · 7 blocos)
 
-**Bloco 1** (456 caracteres)
+**Bloco 1** (458 caracteres)
 
 ```
 <warm storytelling> Jacó amava José mais do que a todos os outros filhos, e lhe fez uma túnica de muitas cores.
-<warm storytelling> Toque num feixe para incliná-lo ou levantá-lo. Atenção: os vizinhos também mudam! Deixe todos inclinados diante do feixe de José.
-<warm storytelling> Agora no céu: faça o sol, a lua e as estrelas se inclinarem do mesmo jeito.
+<clear, instructive> Toque num feixe para incliná-lo ou levantá-lo. Atenção: os vizinhos também mudam! Deixe todos inclinados diante do feixe de José.
+<clear, instructive> Agora no céu: faça o sol, a lua e as estrelas se inclinarem do mesmo jeito.
 <warm storytelling> Os irmãos tinham inveja de José, mas o pai guardava essas palavras no coração.
 ```
 
@@ -21,41 +21,41 @@ Falas agrupadas por personagem, em blocos de no máximo 500 caracteres (contando
 <warm storytelling> Mas José estava vivo. No Egito, foi vendido a Potifar, oficial do Faraó. E o Senhor estava com José.
 ```
 
-**Bloco 3** (494 caracteres)
+**Bloco 3** (495 caracteres)
 
 ```
-<warm storytelling> Organize o depósito: em cada linha e em cada coluna deve haver um de cada produto. Toque num espaço vazio para trocar o produto.
+<clear, instructive> Organize o depósito: em cada linha e em cada coluna deve haver um de cada produto. Toque num espaço vazio para trocar o produto.
 <warm storytelling> A esposa de Potifar o agarra pela capa: “Fica comigo!” O que José faz?
 <warm storytelling> Mas a esposa de Potifar pôs os olhos em José, dia após dia.
 <warm storytelling> O que José deve fazer? Escolha com sabedoria.
 <warm storytelling> Ela mentiu e José foi lançado na prisão do rei. Mas, mesmo ali, o Senhor estava com ele.
 ```
 
-**Bloco 4** (423 caracteres)
+**Bloco 4** (425 caracteres)
 
 ```
 <warm storytelling> O carcereiro confiou tudo a José. Um dia, chegaram dois oficiais do Faraó: o copeiro e o padeiro.
-<warm storytelling> Primeiro, encontre as pistas escondidas na cela: vire as pedras soltas e use os números para deduzir onde estão.
-<warm storytelling> Ligue cada símbolo do sonho ao seu significado.
+<clear, instructive> Primeiro, encontre as pistas escondidas na cela: vire as pedras soltas e use os números para deduzir onde estão.
+<clear, instructive> Ligue cada símbolo do sonho ao seu significado.
 <warm storytelling> Três dias depois, aconteceu tudo como José disse: o copeiro voltou a servir o Faraó.
 ```
 
-**Bloco 5** (405 caracteres)
+**Bloco 5** (407 caracteres)
 
 ```
 <warm storytelling> Porém o copeiro esqueceu-se de José... por dois anos inteiros.
-<warm storytelling> Associe cada símbolo do sonho ao que ele significa.
-<warm storytelling> Planeje os sete anos de fartura: decida quanto guardar em cada colheita. O povo precisa comer, e o celeiro precisa durar os sete anos de fome!
+<clear, instructive> Associe cada símbolo do sonho ao que ele significa.
+<clear, instructive> Planeje os sete anos de fartura: decida quanto guardar em cada colheita. O povo precisa comer, e o celeiro precisa durar os sete anos de fome!
 <warm storytelling> José tinha trinta anos quando se apresentou ao Faraó, rei do Egito.
 ```
 
-**Bloco 6** (471 caracteres)
+**Bloco 6** (473 caracteres)
 
 ```
 <warm storytelling> Veio a fome sobre toda a terra. E de todas as regiões vinham ao Egito para comprar trigo de José.
-<warm storytelling> Escolha de qual celeiro sai cada pedido. Os pedidos da fila estão à mostra: planeje para que nenhum celeiro fique curto!
+<clear, instructive> Escolha de qual celeiro sai cada pedido. Os pedidos da fila estão à mostra: planeje para que nenhum celeiro fique curto!
 <warm storytelling> Os irmãos não reconheceram José. Ele os pôs à prova e mandou trazer Benjamim.
-<warm storytelling> Use as pistas para sentar os irmãos na ordem de nascimento. Toque em dois lugares para trocar.
+<clear, instructive> Use as pistas para sentar os irmãos na ordem de nascimento. Toque em dois lugares para trocar.
 ```
 
 **Bloco 7** (347 caracteres)
@@ -69,13 +69,13 @@ Falas agrupadas por personagem, em blocos de no máximo 500 caracteres (contando
 
 ## José (8 falas · 2 blocos)
 
-**Bloco 1** (437 caracteres)
+**Bloco 1** (434 caracteres)
 
 ```
 <cheerful, excited> Irmãos, ouçam o sonho que eu tive! Estávamos atando feixes no campo... e os feixes de vocês se inclinavam diante do meu!
 <excited> Tive outro sonho: o sol, a lua e onze estrelas se inclinavam diante de mim!
 <cheerful> Eis-me aqui, pai.
-<curious> Como faria eu tamanha maldade e pecaria contra Deus?
+<firm> Como faria eu tamanha maldade e pecaria contra Deus?
 <calm> Não pertencem a Deus as interpretações? Contem-me os sonhos.
 <calm> Lembra-te de mim quando tudo te correr bem.
 ```
@@ -99,10 +99,10 @@ Falas agrupadas por personagem, em blocos de no máximo 500 caracteres (contando
 <friendly> Depressa! O Faraó mandou te buscar. Fizeram a barba e trocaram tuas roupas.
 ```
 
-**Bloco 2** (199 caracteres)
+**Bloco 2** (188 caracteres)
 
 ```
-<friendly, prayerful> Senhor governador, os celeiros ficam do outro lado do palácio. Use a alavanca dos portões.
+<friendly> Senhor governador, os celeiros ficam do outro lado do palácio. Use a alavanca dos portões.
 <friendly> Os homens de Canaã esperam no salão. O mais novo... parece contigo, senhor.
 ```
 
@@ -130,10 +130,10 @@ Falas agrupadas por personagem, em blocos de no máximo 500 caracteres (contando
 
 ## Mordomo (3 falas · 1 bloco)
 
-**Bloco 1** (211 caracteres)
+**Bloco 1** (209 caracteres)
 
 ```
-<prayerful> Senhor governador, caravanas de muitas regiões estão nos portões!
+<excited> Senhor governador, caravanas de muitas regiões estão nos portões!
 <cheerful> Todos foram atendidos, senhor! O Egito e as nações têm pão.
 <calm> Ah... e chegaram dez homens de Canaã. Dizem ser irmãos.
 ```
@@ -186,10 +186,10 @@ Falas agrupadas por personagem, em blocos de no máximo 500 caracteres (contando
 
 ## A esposa de Potifar (1 fala · 1 bloco)
 
-**Bloco 1** (54 caracteres)
+**Bloco 1** (71 caracteres)
 
 ```
-<calm> José... ninguém da casa está aqui. Fica comigo.
+<whispering, insistent> José... ninguém da casa está aqui. Fica comigo.
 ```
 
 ## Benjamim (1 fala · 1 bloco)
@@ -218,10 +218,10 @@ Falas agrupadas por personagem, em blocos de no máximo 500 caracteres (contando
 
 ## Os irmãos (1 fala · 1 bloco)
 
-**Bloco 1** (131 caracteres)
+**Bloco 1** (120 caracteres)
 
 ```
-<sad, prayerful> Senhor, teus servos são doze irmãos, filhos de um homem em Canaã. O mais novo ficou com o pai, e um já não existe.
+<sad> Senhor, teus servos são doze irmãos, filhos de um homem em Canaã. O mais novo ficou com o pai, e um já não existe.
 ```
 
 ## Rúben (1 fala · 1 bloco)

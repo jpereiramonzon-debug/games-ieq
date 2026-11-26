@@ -14,19 +14,19 @@ Falas agrupadas por personagem, em blocos de no máximo 500 caracteres (contando
 <warm storytelling> Romperam-se as fontes do grande abismo, e as janelas do céu se abriram. Choveu quarenta dias e quarenta noites.
 ```
 
-**Bloco 2** (445 caracteres)
+**Bloco 2** (447 caracteres)
 
 ```
-<warm storytelling> Use ◀ e ▶ para equilibrar a arca nas ondas até a chuva passar.
+<clear, instructive> Use ◀ e ▶ para equilibrar a arca nas ondas até a chuva passar.
 <warm storytelling> E Deus se lembrou de Noé e de todos os animais, e fez passar um vento sobre a terra. As águas começaram a baixar.
-<warm storytelling> Toque para a pomba bater as asas. Desvie das nuvens de chuva e encontre a folha de oliveira!
+<clear, instructive> Toque para a pomba bater as asas. Desvie das nuvens de chuva e encontre a folha de oliveira!
 <warm storytelling> A arca repousou sobre os montes de Ararate. Noé saiu, edificou um altar e deu graças ao Senhor.
 ```
 
-**Bloco 3** (159 caracteres)
+**Bloco 3** (160 caracteres)
 
 ```
-<warm storytelling> Observe a ordem das cores e repita para pintar o arco-íris no céu.
+<clear, instructive> Observe a ordem das cores e repita para pintar o arco-íris no céu.
 <warm storytelling> Fim da história de Noé, o homem que andava com Deus.
 ```
 

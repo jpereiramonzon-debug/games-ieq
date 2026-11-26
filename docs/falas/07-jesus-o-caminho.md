@@ -4,13 +4,13 @@ Falas agrupadas por personagem, em blocos de no máximo 500 caracteres (contando
 
 ## Narrador (27 falas · 8 blocos)
 
-**Bloco 1** (489 caracteres)
+**Bloco 1** (490 caracteres)
 
 ```
 <warm storytelling> Às margens do Jordão, uma multidão desce às águas para ser batizada por João.
 <warm storytelling> Leve Jesus até João, no meio do rio. O povo anda de um lado para o outro: esbarrar faz você voltar um pouco. Encontre as brechas!
 <warm storytelling> Jesus foi levado pelo Espírito ao deserto. Quarenta dias de jejum, sol de dia e frio de noite.
-<warm storytelling> Primeiro, resista: busque sombra de dia e o abrigo das pedras à noite, e ore para manter o espírito firme.
+<clear, instructive> Primeiro, resista: busque sombra de dia e o abrigo das pedras à noite, e ore para manter o espírito firme.
 ```
 
 **Bloco 2** (431 caracteres)
@@ -30,35 +30,35 @@ Falas agrupadas por personagem, em blocos de no máximo 500 caracteres (contando
 <warm storytelling> Vendo a multidão, Jesus subiu ao monte, sentou-se e começou a ensinar.
 ```
 
-**Bloco 4** (339 caracteres)
+**Bloco 4** (340 caracteres)
 
 ```
-<warm storytelling> Primeiro desafio: as Bem-aventuranças se embaralharam! Ligue cada começo ao seu final. Cada erro custa fé.
+<clear, instructive> Primeiro desafio: as Bem-aventuranças se embaralharam! Ligue cada começo ao seu final. Cada erro custa fé.
 <warm storytelling> Agora, viva a parábola: mova o semeador e solte sementes só na BOA TERRA. Pedras, espinhos e pássaros desperdiçam a semente.
 <warm storytelling> E as multidões se maravilhavam da sua doutrina.
 ```
 
-**Bloco 5** (500 caracteres)
+**Bloco 5** (437 caracteres)
 
 ```
 <warm storytelling> Jesus abençoa os cestos. Toque num discípulo com cesto cheio e depois num grupo com fome. A fome aumenta sem parar: priorize os grupos mais fracos!
 <warm storytelling> Ao entardecer, atravessam o mar. Jesus adormece na popa, sobre um travesseiro. Então vem uma grande tempestade.
-<warm storytelling> Gire o barco para enfrentar cada onda de frente (a seta mostra de onde ela vem). Onda de lado enche o barco de água!
+<clear, instructive> Gire o barco para enfrentar cada onda de frente (a seta mostra de onde ela vem). Onda de lado enche o barco de água!
+```
+
+**Bloco 6** (488 caracteres)
+
+```
 <warm storytelling> O vento se aquietou e houve grande bonança.
-```
-
-**Bloco 6** (424 caracteres)
-
-```
 <warm storytelling> Jesus cuspiu na terra, fez lodo e o pôs nos olhos do cego.
 <warm storytelling> Puzzle: o cego não vê o caminho. Monte a sequência de passos (↑ ↓ ← →) e toque GUIAR: ele seguirá tudo à risca. Desvie das paredes, das bancas e da água funda.
 <warm storytelling> Puzzle: empurre as pedras do jardim até as marcas para abrir o caminho. Cuidado: pedra encostada na parede não sai mais! Use “Desfazer” se errar.
 ```
 
-**Bloco 7** (490 caracteres)
+**Bloco 7** (491 caracteres)
 
 ```
-<warm storytelling> Segure ORAR para manter a oração. Os discípulos cochilam: toque neles para acordá-los, mas soltar a oração enfraquece o espírito. Resista até o fim da noite.
+<clear, instructive> Segure ORAR para manter a oração. Os discípulos cochilam: toque neles para acordá-los, mas soltar a oração enfraquece o espírito. Resista até o fim da noite.
 <warm storytelling> Judas chegou com uma multidão armada. Pedro puxou a espada e feriu Malco, servo do sumo sacerdote.
 <warm storytelling> E, tocando a orelha de Malco, o curou.
 <warm storytelling> Jesus foi crucificado, morreu e foi sepultado. No primeiro dia da semana, bem cedo, as mulheres foram ao sepulcro.
@@ -129,11 +129,11 @@ Falas agrupadas por personagem, em blocos de no máximo 500 caracteres (contando
 <friendly> Vamos para o outro lado do mar. A noite está chegando.
 ```
 
-**Bloco 2** (279 caracteres)
+**Bloco 2** (268 caracteres)
 
 ```
 <friendly> Um homem cego de nascença pede esmolas perto do templo.
-<friendly, prayerful> Senhor, Lázaro, teu amigo, está doente! Marta e Maria te esperam.
+<friendly> Senhor, Lázaro, teu amigo, está doente! Marta e Maria te esperam.
 <friendly> Vigiai e orai. A noite no monte das Oliveiras é longa.
 <friendly> Quem nos removerá a pedra da entrada do túmulo?
 ```
@@ -176,10 +176,10 @@ Falas agrupadas por personagem, em blocos de no máximo 500 caracteres (contando
 
 ## Marta (2 falas · 1 bloco)
 
-**Bloco 1** (136 caracteres)
+**Bloco 1** (125 caracteres)
 
 ```
-<sad, prayerful> Senhor, se estivesses aqui, meu irmão não teria morrido.
+<sad> Senhor, se estivesses aqui, meu irmão não teria morrido.
 <calm> Sim, Senhor. Creio que tu és o Cristo, o Filho de Deus.
 ```
 
