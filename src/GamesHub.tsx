@@ -2,10 +2,6 @@ import { useEffect, useState } from 'react';
 import { ArrowLeft, Trophy } from 'lucide-react';
 import JesusRun from './games/run/JesusRun';
 import { RunBanner } from './games/run/Banner';
-import JesusQuest from './games/quest/Quest';
-import { QuestBanner } from './games/quest/Banner';
-import Carpenter from './games/carpenter/Carpenter';
-import { CarpenterBanner } from './games/carpenter/Banner';
 import David from './games/david/David';
 import Samson from './games/samson/Samson';
 import Peter from './games/peter/Peter';
@@ -19,7 +15,7 @@ import { useT } from './i18n';
 import { useStore } from './store';
 import { cx } from './ui/kit';
 
-export type GameId = 'esther' | 'joseph' | 'life' | 'peter' | 'noah' | 'samson' | 'david' | 'run' | 'quest' | 'carpenter';
+export type GameId = 'esther' | 'joseph' | 'life' | 'peter' | 'noah' | 'samson' | 'david' | 'run';
 
 export default function GamesHub({ game, setGame }: { game: GameId | null; setGame: (g: GameId | null) => void }) {
   // An invite to the two-player mode goes straight to David.
@@ -29,8 +25,6 @@ export default function GamesHub({ game, setGame }: { game: GameId | null; setGa
   }, []);
   const t = useT();
   const best = useStore((s) => s.best);
-  const questDone = useStore((s) => s.questDone);
-  const carp = useStore((s) => s.carpenter) as { done?: string[] } | null;
   const davi = useStore((s) => s.davidDone);
   const sansao = useStore((s) => s.samsonDone);
   const pedro = useStore((s) => s.peterDone);
@@ -38,7 +32,7 @@ export default function GamesHub({ game, setGame }: { game: GameId | null; setGa
   const vida = useStore((s) => s.lifeDone);
   const jose = useStore((s) => s.josephDone);
   const ester = useStore((s) => s.estherDone);
-  const [hero, setHero] = useState<'jesus' | null>(() => (game && ['life', 'run', 'quest', 'carpenter'].includes(game) ? 'jesus' : null));
+  const [hero, setHero] = useState<'jesus' | null>(() => (game && ['life', 'run'].includes(game) ? 'jesus' : null));
   useBgm(game === null ? 'menu' : null, 0);
   const back = () => setGame(null);
   if (game === 'david') return <David onBack={back} />;
@@ -48,8 +42,6 @@ export default function GamesHub({ game, setGame }: { game: GameId | null; setGa
   if (game === 'joseph') return <Joseph onBack={back} />;
   if (game === 'esther') return <Esther onBack={back} />;
   if (game === 'life') return <Life onBack={back} />;
-  if (game === 'carpenter') return <Carpenter onBack={back} />;
-  if (game === 'quest') return <JesusQuest onBack={back} />;
   if (game === 'run') return <JesusRun onBack={back} />;
 
   const heroBar = (title: string) => (
@@ -89,42 +81,6 @@ export default function GamesHub({ game, setGame }: { game: GameId | null; setGa
         </button>
         <p className="font-pixel mb-2 mt-1 px-1 text-lg">Mais aventuras de Jesus</p>
         <button
-          onClick={() => setGame('quest')}
-          className="mb-3 flex w-full flex-col overflow-hidden rounded-3xl border-[3px] border-[#5b3a1e] bg-[#ead8b2] text-left text-[#3a2414] transition active:scale-[0.99] sm:flex-row"
-        >
-          <span className="block aspect-[200/112] w-full shrink-0 sm:w-72">
-            <QuestBanner />
-          </span>
-          <span className="flex min-w-0 flex-1 flex-col justify-center gap-1 p-4">
-            <span className="font-pixel text-2xl">{t('game.quest')}</span>
-            <span className="text-sm opacity-80">{t('games.quest')}</span>
-            <span className="mt-2 flex items-center justify-between gap-2">
-              <span className="font-pixel rounded-lg border-2 border-[#4a2c14] bg-[#8a5a2e] px-3 py-1.5 text-base text-white">{t('jesus.play')}</span>
-              <span className="flex items-center gap-1 text-sm tabular-nums opacity-70">
-                <Trophy size={15} /> {questDone.length}/6
-              </span>
-            </span>
-          </span>
-        </button>
-        <button
-          onClick={() => setGame('carpenter')}
-          className="mb-3 flex w-full flex-col overflow-hidden rounded-3xl border-[3px] border-[#4a6a2a] bg-[#e4ecc8] text-left text-[#2e3a14] transition active:scale-[0.99] sm:flex-row"
-        >
-          <span className="block aspect-[200/112] w-full shrink-0 sm:w-72">
-            <CarpenterBanner />
-          </span>
-          <span className="flex min-w-0 flex-1 flex-col justify-center gap-1 p-4">
-            <span className="font-pixel text-2xl">{t('game.carpenter')}</span>
-            <span className="text-sm opacity-80">{t('games.carpenter')}</span>
-            <span className="mt-2 flex items-center justify-between gap-2">
-              <span className="font-pixel rounded-lg border-2 border-[#2e3a14] bg-[#6a8a3a] px-3 py-1.5 text-base text-white">{t('jesus.play')}</span>
-              <span className="flex items-center gap-1 text-sm tabular-nums opacity-70">
-                <Trophy size={15} /> {carp?.done?.length ?? 0}/10
-              </span>
-            </span>
-          </span>
-        </button>
-        <button
           onClick={() => setGame('run')}
           className="mb-3 flex w-full flex-col overflow-hidden rounded-3xl border-2 border-[#4a4238]/60 bg-[#f6f1e4] text-left text-[#4a4238] transition active:scale-[0.99] sm:flex-row"
         >
@@ -146,7 +102,7 @@ export default function GamesHub({ game, setGame }: { game: GameId | null; setGa
     );
 
   // Stories still in development: visible, but not playable yet.
-  const WIP = new Set<GameId>(['peter', 'noah', 'esther', 'joseph']);
+  const WIP = new Set<GameId>(['noah', 'esther', 'joseph']);
   const heroes = [
     { id: 'jesus' as const, name: 'Jesus', img: heroCard('jesus'), done: vida.length as number | null, total: 11 },
     { id: 'david' as const, name: 'Davi', img: heroCard('davi'), done: davi.length, total: 6 },

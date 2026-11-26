@@ -19,8 +19,6 @@ export interface State {
   best: Record<string, number>;
   /** Stars per stage in Corrida da Fé. */
   runStars: Record<string, number>;
-  questDone: string[];
-  carpenter: object | null;
   davidDone: string[];
   /** Two-player chapters of David finished together. */
   davidDuoDone: string[];
@@ -49,8 +47,6 @@ const defaults: State = {
   storyVoices: true,
   best: {},
   runStars: {},
-  questDone: [],
-  carpenter: null,
   davidDone: [],
   davidDuoDone: [],
   samsonDone: [],

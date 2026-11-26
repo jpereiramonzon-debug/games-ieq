@@ -17,7 +17,7 @@ Histórias da Bíblia em jogos de pixel art 16-bit, para jogar no celular (deita
   flechas e o encontro em Horesa. Quem cria a sala é Davi; quem entra pelo código ou pelo link de convite é Jônatas.
   Conexão direta entre os aparelhos (WebRTC/PeerJS). Detalhes em `docs/multiplayer.md`.
 - Em todas as histórias: histórico de diálogos, botão de objetivo, diário com conquistas e recordações.
-- **Mais aventuras de Jesus:** Missões de Jesus, O Carpinteiro e Corrida da Fé.
+- **Mais aventuras de Jesus:** Corrida da Fé.
 
 Os jogos musicais (Jesus na Banda e o treino musical) ficam no app AuraPads.
 

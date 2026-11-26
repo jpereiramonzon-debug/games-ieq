@@ -9,5 +9,3 @@ Falas agrupadas por personagem, em blocos de no máximo 500 caracteres (contando
 - [José do Egito](05-jose-do-egito.md) — 71 falas em 25 blocos
 - [Ester](06-ester.md) — 110 falas em 29 blocos
 - [Jesus: o caminho](07-jesus-o-caminho.md) — 83 falas em 30 blocos
-- [Missões de Jesus](08-missoes-de-jesus.md) — 65 falas em 15 blocos
-- [O Carpinteiro](09-o-carpinteiro.md) — 66 falas em 21 blocos

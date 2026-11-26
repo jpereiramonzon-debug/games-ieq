@@ -1,3 +1,4 @@
+import { createPortal } from 'react-dom';
 import { useEffect, useRef, useState } from 'react';
 import { ArrowDown, ArrowUp, Lock, Pause, Play, Star } from 'lucide-react';
 import { engine } from '../../audio/engine';
@@ -528,120 +529,141 @@ function Level({ world, onExit }: { world: World; onExit: () => void }) {
     </span>
   );
 
-  return (
-    <div className="mx-auto flex w-full max-w-3xl flex-col gap-2 animate-rise">
-      <header className="flex items-center gap-2">
-        <button onClick={onExit} aria-label={t('run.backMap')} className="rpg-wood rpg-text h-11 shrink-0 px-3 text-sm">
+  const jumpDown = (e: React.PointerEvent) => {
+    e.preventDefault();
+    if (phaseRef.current === 'paused') return setP('play');
+    press();
+  };
+  const duckDown = (e: React.PointerEvent) => {
+    e.preventDefault();
+    duck(true);
+  };
+  const hudChip = (
+    <div className="rpg-frame rpg-text flex flex-wrap items-center gap-x-3 gap-y-1 px-2 py-1 text-sm">
+      <span>
+        🍞 {hud.breads}
+        {world.length ? `/${hud.total}` : ''}
+      </span>
+      <span>{hud.dist} m</span>
+      {world.length > 0 && (
+        <span className="h-2 min-w-16 flex-1 overflow-hidden border border-[#3a2414] bg-[#3a2414]" role="progressbar" aria-valuenow={Math.round(hud.progress * 100)}>
+          <span className="block h-full bg-[#e8b830]" style={{ width: `${hud.progress * 100}%` }} />
+        </span>
+      )}
+      {hud.dove > 0 && powerChip(t('run.dove'), hud.dove)}
+      {hud.halo > 0 && powerChip(t('run.halo'), hud.halo)}
+      {hud.staff && <span className="rpg-wood px-1.5 py-0.5 text-[#ffe08a]">{t('run.staff')}</span>}
+    </div>
+  );
+  const roundBtn =
+    'rpg-text grid touch-none select-none place-items-center rounded-full border-4 border-[#4a2c14] shadow-[3px_3px_0_#0006] active:scale-95';
+
+  // Full screen: lying down the game fills the whole screen with the controls on top;
+  // standing up the game takes the full width with big buttons below.
+  return createPortal(
+    <div className="fixed inset-0 z-50 flex select-none flex-col bg-[#0a0b10] font-pixel text-white landscape:block" role="dialog" aria-modal="true" aria-label={t(`run.world.${world.id}`)}>
+      <header className="flex items-center gap-2 p-2 pt-[max(0.5rem,env(safe-area-inset-top))] landscape:pointer-events-none landscape:absolute landscape:inset-x-0 landscape:top-0 landscape:z-20 landscape:pl-[max(0.5rem,env(safe-area-inset-left))] landscape:pr-[max(0.5rem,env(safe-area-inset-right))]">
+        <button onClick={onExit} aria-label={t('run.backMap')} className="rpg-wood rpg-text pointer-events-auto h-10 shrink-0 px-3 text-sm">
           ← {t('run.map')}
         </button>
-        <h2 className="font-pixel min-w-0 flex-1 truncate text-lg">{t(`run.world.${world.id}`)}</h2>
+        <h2 className="min-w-0 flex-1 truncate text-lg landscape:hidden">{t(`run.world.${world.id}`)}</h2>
+        <div className="hidden min-w-0 flex-1 landscape:block">{hudChip}</div>
         {phase === 'play' && (
-          <button onClick={() => setP('paused')} aria-label={t('run.pause')} className="rpg-wood rpg-text grid h-11 w-11 place-items-center">
+          <button onClick={() => setP('paused')} aria-label={t('run.pause')} className="rpg-wood rpg-text pointer-events-auto grid h-10 w-10 place-items-center">
             <Pause size={18} />
           </button>
         )}
       </header>
-      <div className="relative">
-        <div className="mb-2 short:pointer-events-none short:absolute short:left-[6.5rem] short:top-[2.6rem] short:z-10 short:mb-0 short:origin-top-left short:scale-75">
-          {coach.node}
-        </div>
-        <div className="rpg-frame rpg-text mb-2 flex flex-wrap items-center gap-x-3 gap-y-1 px-3 py-1.5 text-sm">
-          <span>
-            🍞 {hud.breads}
-            {world.length ? `/${hud.total}` : ''}
-          </span>
-          <span>{hud.dist} m</span>
-          {world.length > 0 && (
-            <span className="h-2 min-w-16 flex-1 overflow-hidden border border-[#3a2414] bg-[#3a2414]" role="progressbar" aria-valuenow={Math.round(hud.progress * 100)}>
-              <span className="block h-full bg-[#e8b830]" style={{ width: `${hud.progress * 100}%` }} />
-            </span>
-          )}
-          {hud.dove > 0 && powerChip(t('run.dove'), hud.dove)}
-          {hud.halo > 0 && powerChip(t('run.halo'), hud.halo)}
-          {hud.staff && <span className="rpg-wood px-1.5 py-0.5 text-[#ffe08a]">{t('run.staff')}</span>}
-        </div>
-        <div className="grid grid-cols-2 gap-2 short:grid-cols-[5.5rem_minmax(0,1fr)_5.5rem]">
-          <div
-            ref={box}
-            className="rpg-frame relative col-span-2 aspect-[200/112] overflow-hidden !p-0 short:order-2 short:col-span-1 short:aspect-auto short:h-[calc(100dvh-10.5rem)]"
-          >
-            <canvas
-              ref={canvas}
-              width={VW}
-              height={VH}
-              className="pixelated absolute inset-0 block h-full w-full touch-none select-none"
-              aria-label={t('run.canvas')}
-              onPointerDown={(e) => {
-                e.currentTarget.setPointerCapture(e.pointerId);
-                if (phaseRef.current === 'paused') return setP('play');
-                if (phaseRef.current === 'dead' || phaseRef.current === 'clear') return;
-                press();
-              }}
-              onPointerUp={release}
-              onPointerCancel={release}
-            />
-            {(phase === 'ready' || phase === 'paused') && (
-              <button onClick={() => (phase === 'paused' ? setP('play') : press())} className="rpg-text absolute inset-0 grid place-items-center text-center">
-                <span className="rpg-frame px-4 py-2 text-lg">
-                  {phase === 'paused' ? <Play className="mx-auto mb-1" size={20} /> : null}
-                  {phase === 'paused' ? t('run.resume') : t('run.tapToStart')}
-                </span>
-              </button>
-            )}
-            {result && (
-              <div className="absolute inset-0 grid place-items-center bg-black/55 p-2">
-                <div className="rpg-frame rpg-text px-4 py-3 text-center">
-                  <p className="text-xl">{phase === 'clear' ? t('run.cleared') : t('run.gameOver')}</p>
-                  {phase === 'clear' && (
-                    <div className="my-1 flex justify-center gap-1">
-                      {[0, 1, 2].map((i) => (
-                        <Star key={i} size={22} className={i < result.stars ? 'fill-[#e0a92e] text-[#e0a92e]' : 'opacity-30'} />
-                      ))}
-                    </div>
-                  )}
-                  <p className="text-sm">
-                    🍞 {result.breads}
-                    {world.length ? `/${result.total}` : ''} · {result.dist} m{result.record ? ` · ★ ${t('game.record')}` : ''}
-                  </p>
-                  <div className="mt-2 flex justify-center gap-2">
-                    <button onClick={onExit} className="rpg-wood h-11 px-3">
-                      {t('run.map')}
-                    </button>
-                    <button onClick={restart} className="rpg-wood h-11 px-4 text-[#ffe08a]">
-                      {t('game.again')}
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-          <button
+      <div className="px-2 landscape:pointer-events-none landscape:absolute landscape:left-[max(0.5rem,env(safe-area-inset-left))] landscape:top-14 landscape:z-20 landscape:max-w-[55%] landscape:origin-top-left landscape:scale-90 landscape:px-0">
+        {coach.node}
+      </div>
+      <div className="px-2 pt-2 landscape:hidden">{hudChip}</div>
+      <div className="flex flex-1 flex-col justify-evenly gap-3 p-2 landscape:absolute landscape:inset-0 landscape:block landscape:p-0">
+        <div ref={box} className="relative aspect-[16/10] w-full overflow-hidden border-y-[3px] border-[#5b3a1e] landscape:aspect-auto landscape:h-full landscape:border-0">
+          <canvas
+            ref={canvas}
+            width={VW}
+            height={VH}
+            className="pixelated absolute inset-0 block h-full w-full touch-none select-none"
+            aria-label={t('run.canvas')}
             onPointerDown={(e) => {
-              e.preventDefault();
+              e.currentTarget.setPointerCapture(e.pointerId);
               if (phaseRef.current === 'paused') return setP('play');
+              if (phaseRef.current === 'dead' || phaseRef.current === 'clear') return;
               press();
             }}
             onPointerUp={release}
             onPointerCancel={release}
+          />
+          {(phase === 'ready' || phase === 'paused') && (
+            <button onClick={() => (phase === 'paused' ? setP('play') : press())} className="rpg-text absolute inset-0 z-10 grid place-items-center text-center">
+              <span className="rpg-frame px-4 py-2 text-lg">
+                {phase === 'paused' ? <Play className="mx-auto mb-1" size={20} /> : null}
+                {phase === 'paused' ? t('run.resume') : t('run.tapToStart')}
+              </span>
+            </button>
+          )}
+          {result && (
+            <div className="absolute inset-0 z-30 flex overflow-y-auto bg-black/55 p-2">
+              <div className="rpg-frame rpg-text m-auto px-4 py-3 text-center">
+                <p className="text-xl">{phase === 'clear' ? t('run.cleared') : t('run.gameOver')}</p>
+                {phase === 'clear' && (
+                  <div className="my-1 flex justify-center gap-1">
+                    {[0, 1, 2].map((i) => (
+                      <Star key={i} size={22} className={i < result.stars ? 'fill-[#e0a92e] text-[#e0a92e]' : 'opacity-30'} />
+                    ))}
+                  </div>
+                )}
+                <p className="text-sm">
+                  🍞 {result.breads}
+                  {world.length ? `/${result.total}` : ''} · {result.dist} m{result.record ? ` · ★ ${t('game.record')}` : ''}
+                </p>
+                <div className="mt-2 flex justify-center gap-2">
+                  <button onClick={onExit} className="rpg-wood h-11 px-3">
+                    {t('run.map')}
+                  </button>
+                  <button onClick={restart} className="rpg-wood h-11 px-4 text-[#ffe08a]">
+                    {t('game.again')}
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+        <div className="grid grid-cols-2 gap-3 landscape:contents">
+          <button
+            onPointerDown={jumpDown}
+            onPointerUp={release}
+            onPointerCancel={release}
             onPointerLeave={release}
-            className="rpg-wood rpg-text flex h-16 touch-none select-none items-center justify-center gap-2 text-lg active:translate-y-0.5 short:order-1 short:h-auto short:flex-col short:text-sm"
+            aria-label={t('run.jump')}
+            className={cx(
+              roundBtn,
+              'h-32 w-full rounded-2xl bg-[#c8321f] text-lg landscape:absolute landscape:bottom-[max(0.75rem,env(safe-area-inset-bottom))] landscape:right-[max(1rem,env(safe-area-inset-right))] landscape:z-20 landscape:h-16 landscape:w-16 landscape:rounded-full landscape:bg-[#c8321f]/70 landscape:text-sm',
+            )}
           >
-            <ArrowUp size={20} /> {t('run.jump')}
+            <span className="flex flex-col items-center leading-none">
+              <ArrowUp size={22} /> {t('run.jump')}
+            </span>
           </button>
           <button
-            onPointerDown={(e) => {
-              e.preventDefault();
-              duck(true);
-            }}
+            onPointerDown={duckDown}
             onPointerUp={() => duck(false)}
             onPointerCancel={() => duck(false)}
             onPointerLeave={() => duck(false)}
-            className="rpg-wood rpg-text flex h-16 touch-none select-none items-center justify-center gap-2 text-lg active:translate-y-0.5 short:order-3 short:h-auto short:flex-col short:text-sm"
+            aria-label={t('run.duck')}
+            className={cx(
+              roundBtn,
+              'h-32 w-full rounded-2xl bg-[#5a4a3a] text-lg landscape:absolute landscape:bottom-[max(0.75rem,env(safe-area-inset-bottom))] landscape:left-[max(1rem,env(safe-area-inset-left))] landscape:z-20 landscape:h-16 landscape:w-16 landscape:rounded-full landscape:bg-[#5a4a3a]/70 landscape:text-sm',
+            )}
           >
-            <ArrowDown size={20} /> {t('run.duck')}
+            <span className="flex flex-col items-center leading-none">
+              <ArrowDown size={22} /> {t('run.duck')}
+            </span>
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

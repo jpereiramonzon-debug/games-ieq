@@ -392,18 +392,6 @@ const STRINGS: Record<string, [string, string, string]> = {
     'Story mode: the shepherd against the lion and the bear, the anointing, the harp for Saul, Goliath, the cave of En Gedi and the ark coming to Jerusalem.',
     'Modo historia: el pastor contra el león y el oso, la unción, el arpa para Saúl, Goliat, la cueva de En-Gadi y el arca llegando a Jerusalén.',
   ],
-  'game.carpenter': ['O Carpinteiro', 'The Carpenter', 'El Carpintero'],
-  'games.carpenter': [
-    'Jesus jovem na oficina de Nazaré: corte madeira, cuide da horta, martele na bancada e entregue as encomendas da vila.',
-    'Young Jesus in the Nazareth workshop: chop wood, tend the garden, hammer at the bench and deliver the village orders.',
-    'Jesús joven en el taller de Nazaret: corta leña, cuida el huerto, martilla en el banco y entrega los encargos del pueblo.',
-  ],
-  'game.quest': ['Missões de Jesus', 'Missions of Jesus', 'Misiones de Jesús'],
-  'games.quest': [
-    'Aventura com o celular deitado: chame Pedro, cure, multiplique os pães, ensine no monte, vire as mesas do templo e vença a tentação.',
-    'Play in landscape: call Peter, heal, multiply bread, teach on the mount, overturn the temple tables and overcome temptation.',
-    'Con el móvil acostado: llama a Pedro, sana, multiplica los panes, enseña en el monte, vuelca las mesas del templo y vence la tentación.',
-  ],
   'game.run': ['Corrida da Fé', 'Run of Faith', 'Carrera de la Fe'],
   'games.run': [
     'Jesus corre pelo deserto, pelo mar e por Jerusalém: pule, abaixe, pise nos bichos e junte os pães.',
