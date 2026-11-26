@@ -12,7 +12,7 @@ import type { Look } from './person';
 import type { GameProps } from './stage';
 import { RotateHint } from './orientation';
 import { setSpeaker } from './speaker';
-import { preloadLine, speakLine, stopLine } from './voices';
+import { preloadLine, speakLine, stopLine, willSpeak } from './voices';
 import { useBgm, type Track } from '../bgm';
 import { Platform } from '../platform/Platform';
 import { Cinematic } from '../platform/Cinematic';
@@ -234,13 +234,27 @@ function History({ log, speakers, onClose }: { log: SLine[]; speakers: Saga['spe
 export function Talk({ lines, speakers, onDone, onLine, log }: { lines: SLine[]; speakers: Saga['speakers']; onDone: () => void; onLine?: (l: SLine) => void; log?: SLine[] }) {
   const [i, setI] = useState(0);
   const [hist, setHist] = useState(false);
+  // Typing speed per line: a spoken line waits for its clip, then follows its length.
+  const [speed, setSpeed] = useState<{ i: number; cps: number }>({ i: -1, cps: 70 });
   useEffect(() => {
     const l = lines[i];
     if (!l) return;
     onLine?.(l);
     setSpeaker({ who: l.who, mood: l.mood });
-    speakLine(l.text);
+    // The text follows the voice: it starts with the clip and is typed over the clip's length.
+    let alive = true;
+    const idx = i;
+    if (willSpeak(l.text)) {
+      const fallback = window.setTimeout(() => alive && setSpeed({ i: idx, cps: 70 }), 1500);
+      void speakLine(l.text).then((dur) => {
+        window.clearTimeout(fallback);
+        if (alive) setSpeed({ i: idx, cps: dur ? Math.max(8, l.text.length / Math.max(0.5, dur * 0.9)) : 70 });
+      });
+    } else stopLine();
     preloadLine(lines[i + 1]?.text);
+    return () => {
+      alive = false;
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [i, lines]);
   useEffect(
@@ -271,6 +285,7 @@ export function Talk({ lines, speakers, onDone, onLine, log }: { lines: SLine[];
   });
   if (!line) return null;
   const sp = speakers[line.who];
+  const cps = !willSpeak(line.text) ? 70 : speed.i === i ? speed.cps : 0;
   return (
     <>
       <div className="absolute inset-x-0 bottom-0 z-20 p-2 pl-[max(0.5rem,env(safe-area-inset-left))] pr-[max(0.5rem,env(safe-area-inset-right))]" onClick={next}>
@@ -283,10 +298,10 @@ export function Talk({ lines, speakers, onDone, onLine, log }: { lines: SLine[];
             )}
             {line.who === 'narrator' ? (
               <em>
-                <Typed key={i} text={line.text} ctl={typing} />
+                <Typed key={i} text={line.text} ctl={typing} cps={cps} />
               </em>
             ) : (
-              <Typed key={i} text={line.text} ctl={typing} />
+              <Typed key={i} text={line.text} ctl={typing} cps={cps} />
             )}
             <span className="absolute bottom-1 right-2 animate-bounce text-[0.8em] text-[#ffe08a]">▼</span>
           </Dialog>

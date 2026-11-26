@@ -102,7 +102,7 @@ export default function GamesHub({ game, setGame }: { game: GameId | null; setGa
     );
 
   // Stories still in development: visible, but not playable yet.
-  const WIP = new Set<GameId>(['noah', 'esther', 'joseph']);
+  const WIP = new Set<GameId>(['noah', 'esther']);
   const heroes = [
     { id: 'jesus' as const, name: 'Jesus', img: heroCard('jesus'), done: vida.length as number | null, total: 11 },
     { id: 'david' as const, name: 'Davi', img: heroCard('davi'), done: davi.length, total: 6 },

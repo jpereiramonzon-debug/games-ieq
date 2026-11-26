@@ -52,20 +52,28 @@ export function preloadLine(text?: string) {
   if (url) void load(url);
 }
 
-/** Speak a dialog line with its recorded voice, cutting the previous one. */
-export function speakLine(text: string) {
+/**
+ * Speak a dialog line with its recorded voice, cutting the previous one.
+ * Resolves with the clip's length in seconds when it starts playing, or null
+ * when the line has no recording (or it could not be played).
+ */
+export function speakLine(text: string): Promise<number | null> {
   stopLine();
   const url = enabled() ? urlOf(text) : null;
-  if (!url) return;
+  if (!url) return Promise.resolve(null);
   const mine = ++token;
-  void load(url).then((buf) => {
-    if (!buf || mine !== token) return;
+  return load(url).then((buf) => {
+    if (!buf || mine !== token) return null;
     stop = engine.playBuffer(buf);
     duckBgm(true);
     window.clearTimeout(duckTimer);
     duckTimer = window.setTimeout(() => mine === token && duckBgm(false), buf.duration * 1000 + 150);
+    return buf.duration;
   });
 }
+
+/** True when this line will be spoken (recording exists and voices are on). */
+export const willSpeak = (text: string) => enabled() && !!urlOf(text);
 
 export function stopLine() {
   token++;
